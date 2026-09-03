@@ -4,6 +4,8 @@ This file separates what is already implemented in the private Agent Cashflow so
 
 No private source code, payment credentials, internal contracts, ledgers, prompts or benchmark implementation are copied here.
 
+**Ownership note:** the implementation evidence below is not a claim that I personally hand-authored or independently selected every low-level technical mechanism. My direct role is product/research direction, system blueprint and requirements, expert/persona orchestration, acceptance criteria and quality gates; AI is used heavily in implementation.
+
 ## Existing engineering substrate
 
 The current private source explicitly preserves a machine-native request/payment/work/outcome/settlement kernel with:
@@ -32,20 +34,13 @@ These are current build/evaluation gates, not completed market proof.
 
 ## What would falsify the hypothesis
 
-A forecast mechanism should fail the product thesis if:
-
-- held-out performance does not beat an adequate cheap baseline;
-- the apparent advantage depends on leakage;
-- the advantage disappears once variable cost is included;
-- latency makes the decision unusable;
-- confidence is poorly calibrated;
-- the result cannot be connected to a stable forecast/outcome identity.
+A forecast mechanism should fail the product thesis if held-out performance does not beat an adequate cheap baseline, the apparent advantage depends on leakage, the advantage disappears once variable cost is included, latency makes the decision unusable, confidence is poorly calibrated, or the result cannot be connected to a stable forecast/outcome identity.
 
 ## Sanitized forecast record
 
 See [examples/sanitized-forecast-record.json](examples/sanitized-forecast-record.json).
 
-The example is synthetic/redacted. It illustrates the important sequencing rule: contract and forecast identity exist **before** the outcome and before evaluation.
+The example is synthetic/redacted. It illustrates the sequencing rule that contract and forecast identity exist before the outcome and before evaluation.
 
 ## Implemented vs not yet proven
 
@@ -61,11 +56,13 @@ The example is synthetic/redacted. It illustrates the important sequencing rule:
 | External forecast buyer / paid repeat | Not proven |
 | Production forecast deployment | Not claimed |
 
-## What I can defend in an interview
+## What I personally own and can explain
 
-- why a forecast contract must be fixed before the outcome;
-- how leakage can create a false sense of model advantage;
-- why a sophisticated system must beat cheap adequate alternatives rather than “nothing”;
-- why cost and latency belong in the product evaluation;
-- how provenance and event identity affect calibration evidence;
-- why an existing technical substrate does not automatically prove the new commercial hypothesis.
+- why I chose to explore forecast evidence as the current product/research direction;
+- the high-level blueprint and proof gates I require before treating a forecast advantage as real;
+- how I structure specialist AI personas/agents to research, build, critique and revise the system;
+- why I require explicit unproven states rather than turning a build into a performance claim;
+- what the current implementation evidence establishes and what remains hypothesis;
+- how I direct further iteration or rejection when AI-generated work does not meet the quality/evidence bar.
+
+For a specific benchmark implementation, statistical technique, contract shape, provenance mechanism or code path, I distinguish between **implementation evidence** and **a decision I personally made**.
