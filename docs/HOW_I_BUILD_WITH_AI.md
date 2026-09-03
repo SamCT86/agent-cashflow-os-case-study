@@ -1,45 +1,41 @@
-# How I build with AI
+# AI in the Agent Cashflow workflow
 
-Agent Cashflow OS sits in a useful tension: AI is both part of the product hypothesis and part of the implementation workflow.
+AI is useful for exploring the hypothesis. It cannot be allowed to validate its own advantage.
 
 ## Where AI helps
 
-I use AI to accelerate:
+- shaping implementation candidates;
+- generating edge cases;
+- discussing benchmark and evaluation design;
+- reviewing contract semantics;
+- accelerating documentation and critique.
 
-- hypothesis exploration;
-- implementation candidates;
-- contract and interface review;
-- test and edge-case generation;
-- benchmark/evaluation design discussion;
-- documentation and critical review.
+## What stays explicit
 
-## What still needs explicit control
+- the forecast contract before the outcome;
+- stable event and provenance identity;
+- held-out boundaries;
+- adequate cheap baselines;
+- calibration;
+- cost and latency;
+- `not proven yet` as a valid conclusion.
 
-The workflow still needs an explicit owner for:
-
-- what the forecast contract actually means;
-- event identity;
-- provenance;
-- leakage boundaries;
-- what belongs in a held-out comparison;
-- what counts as a cheap adequate baseline;
-- how cost and latency affect usefulness;
-- when the correct conclusion is “not proven yet.”
-
-## Quality model
+## Working loop
 
 ```text
-AI-assisted candidate
-        ↓
-contract + provenance checks
-        ↓
-controlled evaluation
-        ↓
-held-out evidence
-        ↓
-compare against simpler alternatives
-        ↓
+forecast hypothesis
+      ↓
+freeze contract
+      ↓
+AI-assisted implementation
+      ↓
+held-out evaluation
+      ↓
+compare with adequate baselines
+      ↓
 keep / revise / reject
 ```
 
-The goal is not to use AI to produce a persuasive forecast demo. The goal is to use AI as leverage while preserving the evaluation discipline needed to determine whether the forecast mechanism deserves trust at all.
+A convincing demo is not evidence of forecast advantage. AI may help build the mechanism, but the mechanism has to survive an evaluation it does not get to rewrite after seeing the outcome.
+
+For concrete implementation evidence, see [../PROOF.md](../PROOF.md).

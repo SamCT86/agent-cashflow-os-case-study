@@ -1,0 +1,14 @@
+{
+  "example_type": "synthetic_redacted_portfolio_example",
+  "operation": "forecast_event",
+  "forecast_id": "forecast_<redacted>",
+  "contract_state": "FROZEN_BEFORE_OUTCOME",
+  "forecast": {
+    "value": "<redacted>",
+    "confidence": 0.64,
+    "provenance": "<redacted>"
+  },
+  "outcome": null,
+  "evaluation_state": "PENDING_OUTCOME",
+  "note": "No forecast advantage can be claimed until the relevant outcome exists and held-out comparison against adequate baselines is complete."
+}

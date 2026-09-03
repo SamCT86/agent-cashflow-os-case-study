@@ -1,111 +1,89 @@
-# Agent Cashflow OS — Public Research / Engineering Case Study
+# Agent Cashflow OS — forecast evidence, not forecast theater
 
+**Sarmad Tawfeek · AI systems · technical implementation · automation**  
 **Status:** Research / Building  
-**Current direction:** Forecast evidence for autonomous decision agents  
+**Current hypothesis:** Agent Forecast Evidence  
 **Portfolio:** https://sarmadtawfeek.se/
 
-> This repository is a public case study of the current research/build direction. The implementation and evaluation machinery remain private by design.
+The current question is deliberately empirical:
 
-## The problem
+> **Can an agent forecast be defined before the outcome, tied to provenance, and later evaluated against adequate alternatives strongly enough to earn decision weight?**
 
-An autonomous agent can produce a confident forecast without giving a downstream system enough reason to know whether that forecast deserves weight.
+This repository does not present forecast superiority as already proven.
 
-The useful question is not:
+## What actually exists today
 
-> “Did an AI make a prediction?”
+The private implementation already contains a preserved machine-native substrate from earlier work:
 
-It is closer to:
+- request / payment / work / outcome / settlement flow;
+- idempotency and replay-safety mechanisms;
+- deterministic schemas;
+- provenance handling;
+- traffic classification;
+- an economic ledger;
+- an x402 / Base Sepolia proof path.
 
-**Can the forecast be tied to an explicit contract, provenance and later outcome evidence strongly enough to evaluate whether it was actually useful?**
+The **forecast-specific product edge is still a hypothesis**. The current direction is to make `forecast_event` semantics, forecast/outcome identity, calibration state and held-out benchmark rules explicit before claiming advantage.
 
-## Current build hypothesis
+**Start with the evidence layer:** [PROOF.md](PROOF.md)
 
-Agent Cashflow OS is currently exploring **forecast evidence** as its primary build hypothesis.
-
-The public system direction includes:
-
-- explicit forecast contracts;
-- stable event identity;
-- provenance;
-- later outcome recording;
-- calibration-state concepts;
-- automated testing;
-- held-out evaluation concepts against simpler alternatives.
-
-This is a technical build hypothesis, not proven market demand or proven forecast advantage.
-
-## System at a glance
+## The research boundary
 
 ```text
-Forecast request
-      ↓
-Explicit forecast contract
-      ↓
+Forecast contract frozen before outcome
+          ↓
 Forecast + provenance
-      ↓
-Outcome observation
-      ↓
-Held-out / calibration evidence
-      ↓
-Decision support
+          ↓
+Outcome becomes observable
+          ↓
+Held-out comparison
+          ↓
+Cheap adequate baselines
+          ↓
+Calibration + cost + latency
+          ↓
+Advantage proven / not proven
 ```
 
-## What I want a technical reviewer to inspect
+A compelling example is not enough. The forecast has to beat a reasonable alternative on evidence that was not shaped after seeing the answer.
 
-- **Contract before performance narrative.** Forecast semantics should be explicit before evaluation.
-- **Provenance before confidence.** A prediction without enough context about how it was produced is weak decision evidence.
-- **Held-out evidence over demonstration.** A convincing example is not the same as a leakage-safe comparison.
-- **Calibration over certainty theater.** The system should preserve uncertainty rather than reward confident presentation.
-- **Economics belongs in the evaluation.** A stronger forecast only matters if any advantage survives the cost and latency required to produce it.
+## A failure mode I am explicitly designing against
 
-## AI-native build approach
+### Outcome leakage / moving semantics
 
-This project is deliberately reflexive: AI is both part of the problem space and part of my implementation workflow.
+If the meaning of a forecast can change after the outcome is known, evaluation becomes meaningless.
 
-I use AI to accelerate exploration, implementation candidates, evaluation design, edge-case generation and review. The system still needs explicit contracts, provenance and empirical gates before a stronger claim is accepted.
+Likewise, if development examples leak into the evaluation set, a good-looking benchmark can measure familiarity rather than forecasting value.
 
-```text
-Hypothesis
-   ↓
-Explicit contract
-   ↓
-AI-assisted implementation
-   ↓
-Controlled evaluation
-   ↓
-Outcome + provenance
-   ↓
-Keep / revise / reject the hypothesis
-```
+The safer design freezes contract semantics first, preserves provenance and keeps held-out evaluation separate from demonstration examples.
+
+## Where AI fits
+
+AI is useful for hypothesis exploration, implementation candidates, test ideas and evaluation-design critique. It cannot be allowed to grade its own forecast by changing the contract or baseline after the outcome is visible.
 
 More detail: [docs/HOW_I_BUILD_WITH_AI.md](docs/HOW_I_BUILD_WITH_AI.md)
 
 ## Technical context
 
-Current project evidence supports work with:
+`Node.js` · `deterministic contracts` · `SHA-256 provenance concepts` · `automated tests` · `held-out evaluation design` · `idempotency / replay safety`
 
-`Node.js` · `deterministic contracts` · `SHA-256 provenance concepts` · `automated tests` · `held-out evaluation design`
+## Inspect the proof
 
-These are implementation contexts, not self-rated proficiency badges.
+- [Observable proof](PROOF.md)
+- [Sanitized forecast record](examples/sanitized-forecast-record.json)
+- [System view](docs/SYSTEM_VIEW.md)
+- [Engineering decisions](docs/DECISIONS.md)
+- [Verification approach](docs/VERIFICATION.md)
+- [Public / private boundary](PUBLIC_BOUNDARY.md)
 
-## Verification mindset
+## Not claimed
 
-Forecast quality is treated as an empirical question. Demonstration examples are weaker than held-out comparison, and technical mechanism proof remains separate from commercial validation.
-
-See [docs/VERIFICATION.md](docs/VERIFICATION.md).
-
-## Current truth boundary
-
-This repository does **not** claim:
-
-- proven forecast superiority;
-- a qualified real held-out advantage;
-- external buyers;
-- paid repeat usage;
+- a finished forecast engine;
+- a qualified real held-out corpus;
+- measured forecast advantage;
+- an external forecast buyer;
+- paid forecast repeat use;
+- production forecast deployment;
 - product-market fit.
 
-## Public / private boundary
-
-Private source, exact contracts, benchmark implementation, internal ledgers, prompts, fixtures, roadmap sequencing and economic mechanisms are intentionally excluded.
-
-See [PUBLIC_BOUNDARY.md](PUBLIC_BOUNDARY.md).
+The point of this project today is to show **evaluation discipline around an AI hypothesis**, while keeping the difference between an implemented substrate and an unproven product advantage explicit.
