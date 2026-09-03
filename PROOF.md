@@ -1,6 +1,6 @@
 # Observable proof
 
-This file separates what is already implemented in the private Agent Cashflow / Agent Cash Cow source from what remains a forecast research hypothesis.
+This file separates what is already implemented in the private Agent Cashflow source from what remains a forecast research hypothesis.
 
 No private source code, payment credentials, internal contracts, ledgers, prompts or benchmark implementation are copied here.
 
