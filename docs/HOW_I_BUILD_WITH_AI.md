@@ -1,41 +1,48 @@
-# AI in the Agent Cashflow workflow
+# How I direct the AI-assisted Agent Cashflow build
 
-AI is useful for exploring the hypothesis. It cannot be allowed to validate its own advantage.
+Agent Cashflow is built with heavy use of AI agents/models. My role is to define and direct the product/research system, not to claim authorship of every line of code.
 
-## Where AI helps
+## What I own
 
-- shaping implementation candidates;
-- generating edge cases;
-- discussing benchmark and evaluation design;
-- reviewing contract semantics;
-- accelerating documentation and critique.
+- researching the product/research opportunity and choosing the hypothesis to pursue;
+- defining the high-level blueprint and the proof gates needed before stronger claims are accepted;
+- creating specialist personas/experts and assigning them responsibilities;
+- setting constraints, acceptance criteria and quality gates;
+- requiring held-out evidence, calibration thinking and explicit unproven states;
+- sending work back for revision when it does not meet the system or quality requirements.
 
-## What stays explicit
+## What AI handles heavily
 
-- the forecast contract before the outcome;
-- stable event and provenance identity;
-- held-out boundaries;
-- adequate cheap baselines;
-- calibration;
-- cost and latency;
-- `not proven yet` as a valid conclusion.
+- implementation and code generation/revision;
+- hypothesis and technical-option exploration;
+- benchmark/evaluation critique;
+- edge-case and test generation;
+- technical review and documentation.
+
+I do **not** claim that I independently selected or hand-authored every contract, provenance mechanism, benchmark implementation, ledger structure or code path.
 
 ## Working loop
 
 ```text
-forecast hypothesis
-      ↓
-freeze contract
-      ↓
-AI-assisted implementation
-      ↓
-held-out evaluation
-      ↓
-compare with adequate baselines
-      ↓
-keep / revise / reject
+research hypothesis
+        ↓
+define product + blueprint + proof gates
+        ↓
+assign specialist AI personas / agents
+        ↓
+AI-assisted implementation and iteration
+        ↓
+held-out / evidence / quality gates
+        ↓
+accept, revise or reject the hypothesis
 ```
 
-A convincing demo is not evidence of forecast advantage. AI may help build the mechanism, but the mechanism has to survive an evaluation it does not get to rewrite after seeing the outcome.
+The quality bar requires a forecast claim to survive evidence rather than presentation. The low-level mechanism used to satisfy that bar may come from the AI-assisted implementation process unless I explicitly state otherwise.
+
+## Interview boundary
+
+I can explain the product/research problem, why the hypothesis matters, the blueprint and proof gates I required, how I structured the AI workflow, and what is implemented versus still unproven.
+
+For a low-level technical or statistical choice, I will distinguish between **a requirement I set** and **a technical choice made inside the AI-assisted implementation process**.
 
 For concrete implementation evidence, see [../PROOF.md](../PROOF.md).
