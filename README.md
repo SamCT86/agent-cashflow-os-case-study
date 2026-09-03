@@ -5,6 +5,12 @@
 **Current hypothesis:** Agent Forecast Evidence  
 **Portfolio:** https://sarmadtawfeek.se/
 
+## My role in this build
+
+I researched the product/research direction, chose the problem to pursue, defined the high-level blueprint and quality expectations, and used specialist AI personas/agents to drive implementation, critique and iteration.
+
+The implementation is heavily AI-assisted. I do **not** claim that I personally hand-wrote every line of code or independently selected every low-level technical mechanism. My direct ownership is the product hypothesis, system requirements, expert/persona orchestration, acceptance criteria and quality gates.
+
 The current question is deliberately empirical:
 
 > **Can an agent forecast be defined before the outcome, tied to provenance, and later evaluated against adequate alternatives strongly enough to earn decision weight?**
@@ -13,7 +19,7 @@ This repository does not present forecast superiority as already proven.
 
 ## What actually exists today
 
-The private implementation already contains a preserved machine-native substrate from earlier work:
+The private implementation contains a preserved machine-native substrate with:
 
 - request / payment / work / outcome / settlement flow;
 - idempotency and replay-safety mechanisms;
@@ -23,11 +29,11 @@ The private implementation already contains a preserved machine-native substrate
 - an economic ledger;
 - an x402 / Base Sepolia proof path.
 
-The **forecast-specific product edge is still a hypothesis**. The current direction is to make `forecast_event` semantics, forecast/outcome identity, calibration state and held-out benchmark rules explicit before claiming advantage.
+The **forecast-specific product edge is still a hypothesis**. The current direction is to make forecast semantics, forecast/outcome identity, calibration state and held-out benchmark rules explicit before claiming advantage.
 
 **Start with the evidence layer:** [PROOF.md](PROOF.md)
 
-## The research boundary
+## Research boundary
 
 ```text
 Forecast contract frozen before outcome
@@ -47,19 +53,19 @@ Advantage proven / not proven
 
 A compelling example is not enough. The forecast has to beat a reasonable alternative on evidence that was not shaped after seeing the answer.
 
-## A failure mode I am explicitly designing against
+These are current research/system requirements; they are not a claim that I personally originated every low-level mechanism used to implement them.
 
-### Outcome leakage / moving semantics
+## A failure mode the research direction must avoid
 
-If the meaning of a forecast can change after the outcome is known, evaluation becomes meaningless.
+If the meaning of a forecast can move after the outcome is known, or development examples leak into evaluation, a good-looking result can measure familiarity rather than forecasting value.
 
-Likewise, if development examples leak into the evaluation set, a good-looking benchmark can measure familiarity rather than forecasting value.
+The research direction therefore requires contract/evaluation semantics to be frozen before stronger performance claims are accepted.
 
-The safer design freezes contract semantics first, preserves provenance and keeps held-out evaluation separate from demonstration examples.
+## How AI fits
 
-## Where AI fits
+AI agents/models are used heavily for implementation, hypothesis exploration, evaluation critique, test ideas, review and iteration.
 
-AI is useful for hypothesis exploration, implementation candidates, test ideas and evaluation-design critique. It cannot be allowed to grade its own forecast by changing the contract or baseline after the outcome is visible.
+My role is to define the product/research question, blueprint the required system behavior, structure the expert/persona workflow, set the quality bar and refuse stronger claims until the evidence gate is met.
 
 More detail: [docs/HOW_I_BUILD_WITH_AI.md](docs/HOW_I_BUILD_WITH_AI.md)
 
@@ -67,12 +73,14 @@ More detail: [docs/HOW_I_BUILD_WITH_AI.md](docs/HOW_I_BUILD_WITH_AI.md)
 
 `Node.js` · `deterministic contracts` · `SHA-256 provenance concepts` · `automated tests` · `held-out evaluation design` · `idempotency / replay safety`
 
-## Inspect the proof
+Technology is implementation context, not a claim that I personally selected or hand-authored every component.
+
+## Inspect the case study
 
 - [Observable proof](PROOF.md)
 - [Sanitized forecast record](examples/sanitized-forecast-record.json)
 - [System view](docs/SYSTEM_VIEW.md)
-- [Engineering decisions](docs/DECISIONS.md)
+- [System requirements & trade-offs](docs/DECISIONS.md)
 - [Verification approach](docs/VERIFICATION.md)
 - [Public / private boundary](PUBLIC_BOUNDARY.md)
 
@@ -84,9 +92,10 @@ More detail: [docs/HOW_I_BUILD_WITH_AI.md](docs/HOW_I_BUILD_WITH_AI.md)
 - an external forecast buyer;
 - paid forecast repeat use;
 - production forecast deployment;
-- product-market fit.
+- product-market fit;
+- personal authorship of every implementation detail.
 
-The point of this project today is to show **evaluation discipline around an AI hypothesis**, while keeping the difference between an implemented substrate and an unproven product advantage explicit.
+The point of this project today is to show how I direct and quality-gate an AI-assisted technical/research build while keeping implemented substrate separate from an unproven product advantage.
 
 ## Related engineering case studies
 
