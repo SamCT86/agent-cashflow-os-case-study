@@ -87,3 +87,9 @@ More detail: [docs/HOW_I_BUILD_WITH_AI.md](docs/HOW_I_BUILD_WITH_AI.md)
 - product-market fit.
 
 The point of this project today is to show **evaluation discipline around an AI hypothesis**, while keeping the difference between an implemented substrate and an unproven product advantage explicit.
+
+## Related engineering case studies
+
+- [MachineOutcome](https://github.com/SamCT86/machineoutcome-case-study) — outcome verification before reliability and delegation claims.
+- [ReleaseProof](https://github.com/SamCT86/releaseproof-case-study) — exact-artifact evidence and reproducible rechecks.
+- [PriceBriefs](https://github.com/SamCT86/pricebriefs-case-study) — deterministic decision support with evidence-bound refusal states.
