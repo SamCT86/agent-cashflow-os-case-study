@@ -1,4 +1,8 @@
-# Selected engineering decisions
+# System requirements and trade-offs
+
+These are requirements and trade-offs represented by the current Agent Cashflow research/build direction. They explain the product/system boundary without claiming that I personally originated every low-level engineering or statistical choice used to implement it.
+
+My direct ownership is the product/research direction, high-level blueprint, expert/persona orchestration, constraints, acceptance criteria and quality gates. The implementation process is heavily AI-assisted.
 
 ## 1. Freeze the meaning before measuring performance
 
@@ -36,10 +40,10 @@ The existence of contracts, synthetic tests or a build does not prove real forec
 
 **Trade-off:** less hype, stronger credibility.
 
-## Interview questions this should create
+## Questions this case study is intended to create
 
-- How would you prevent forecast leakage?
-- What baseline would you use and why?
-- How do you define event identity?
-- What does calibration mean in this system?
-- How much advantage is enough once cost and latency are included?
+- What product/research hypothesis is being tested?
+- What proof gate should exist before a forecast is treated as useful?
+- Why compare against cheap adequate alternatives?
+- Why keep unproven states explicit?
+- Which parts of the blueprint were requirements I set, and which low-level technical/statistical choices came from the AI-assisted implementation process?
