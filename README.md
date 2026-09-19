@@ -1,36 +1,18 @@
-# Agent Cashflow OS — forecast evidence, not forecast theater
+# Agent Cashflow OS — paused forecast-evidence research
 
-**Sarmad Tawfeek · AI systems · technical implementation · automation**  
-**Status:** Product build paused · research / engineering asset  
+**Status:** Paused research / engineering asset  
 **Current hypothesis:** Agent Forecast Evidence  
 **Portfolio:** https://sarmadtawfeek.se/
 
-## Current status
+This repository preserves a research direction and engineering record. It is **not** presented as an active product launch.
 
-The active product build is currently **paused pending explicit resume**. The underlying machine-native substrate and forecast-evidence research direction remain useful engineering evidence, but this repository should not be read as an active launch claim.
+## Current question
 
-Public notes and artifacts:
+> Can an agent forecast be frozen before the outcome, tied to provenance, and later evaluated against adequate alternatives strongly enough to earn decision weight?
 
-1. [Current public status — 2026-09-19](CURRENT_PUBLIC_STATUS.md)
-2. [Observable proof](PROOF.md)
-3. [Sanitized forecast record](examples/sanitized-forecast-record.json)
-4. [System view](docs/SYSTEM_VIEW.md)
-5. [Verification approach](docs/VERIFICATION.md)
-6. [Public / private boundary](PUBLIC_BOUNDARY.md)
+This repository does not claim that forecast superiority is already proven.
 
-## Engineering ownership
-
-AI tools are part of my implementation workflow. I use them to accelerate investigation, implementation, testing and review, while remaining accountable for the system boundary, architecture constraints, code review, debugging, acceptance criteria and the decision to ship or reject a change.
-
-The useful question here is not who typed each token. It is whether the behavior is explicit, testable, reproducible and safe under failure. The executable tests and design trade-offs in this repository are the public evidence for that claim.
-
-The current question is deliberately empirical:
-
-> **Can an agent forecast be defined before the outcome, tied to provenance, and later evaluated against adequate alternatives strongly enough to earn decision weight?**
-
-This repository does not present forecast superiority as already proven.
-
-## What actually exists today
+## What exists
 
 The private implementation contains a preserved machine-native substrate with:
 
@@ -42,41 +24,25 @@ The private implementation contains a preserved machine-native substrate with:
 - an economic ledger;
 - an x402 / Base Sepolia proof path.
 
-The **forecast-specific product edge is still a hypothesis**. The relevant proof direction remains to make forecast semantics, forecast/outcome identity, calibration state and held-out benchmark rules explicit before claiming advantage.
+The forecast-specific edge remains a hypothesis. The required proof path is explicit forecast semantics, stable forecast/outcome identity, calibration state and held-out evaluation against reasonable baselines.
 
-**Start with the evidence layer:** [PROOF.md](PROOF.md)
-
-## Research boundary
+## Research contract
 
 ```text
-Forecast contract frozen before outcome
-          ↓
-Forecast + provenance
-          ↓
-Outcome becomes observable
-          ↓
-Held-out comparison
-          ↓
-Cheap adequate baselines
-          ↓
-Calibration + cost + latency
-          ↓
-Advantage proven / not proven
+forecast contract frozen before outcome
+→ forecast + provenance
+→ outcome becomes observable
+→ held-out comparison
+→ adequate baselines
+→ calibration + cost + latency
+→ advantage proven / not proven
 ```
 
-A compelling example is not enough. The forecast has to beat a reasonable alternative on evidence that was not shaped after seeing the answer.
+A compelling example is insufficient. Evaluation must resist post-outcome reframing and development-set leakage.
 
-These are current research/system requirements; they are not a claim that I personally originated every low-level mechanism used to implement them.
+## Engineering process
 
-## A failure mode the research direction must avoid
-
-If the meaning of a forecast can move after the outcome is known, or development examples leak into evaluation, a good-looking result can measure familiarity rather than forecasting value.
-
-The research direction therefore requires contract/evaluation semantics to be frozen before stronger performance claims are accepted.
-
-## Technical context
-
-`Node.js` · `deterministic contracts` · `SHA-256 provenance concepts` · `automated tests` · `held-out evaluation design` · `idempotency / replay safety`
+AI tools are part of the implementation workflow. I remain accountable for system boundaries, architecture constraints, code review, debugging, acceptance criteria, tests and release decisions.
 
 ## Repository map
 
@@ -88,18 +54,18 @@ The research direction therefore requires contract/evaluation semantics to be fr
 - [Verification approach](docs/VERIFICATION.md)
 - [Public / private boundary](PUBLIC_BOUNDARY.md)
 
-## Not claimed
+## Scope
+
+Not claimed here:
 
 - an active product launch;
 - a finished forecast engine;
 - a qualified real held-out corpus;
 - measured forecast advantage;
 - an external forecast buyer;
-- paid forecast repeat use;
+- paid repeat use;
 - production forecast deployment;
-- product-market fit;
-
-The point of this project today is to preserve the research and engineering record without presenting a paused hypothesis as an active product.
+- product-market fit.
 
 ## Related public references
 
