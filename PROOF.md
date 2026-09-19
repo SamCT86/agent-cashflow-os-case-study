@@ -4,7 +4,7 @@ This file separates what is already implemented in the private Agent Cashflow so
 
 No private source code, payment credentials, internal contracts, ledgers, prompts or benchmark implementation are copied here.
 
-**Ownership note:** the implementation evidence below is not a claim that I personally hand-authored or independently selected every low-level technical mechanism. My direct role is product/research direction, system blueprint and requirements, expert/persona orchestration, acceptance criteria and quality gates; AI is used heavily in implementation.
+**Engineering ownership:** AI assistance is used throughout the implementation workflow. I remain accountable for problem framing, architecture constraints, reviewing and debugging changes, acceptance/test gates and release decisions. Where this document cites behavior that remains in the private implementation, it is labeled as implementation evidence rather than as a claim about manual keystroke authorship.
 
 ## Existing engineering substrate
 
@@ -56,7 +56,7 @@ The example is synthetic/redacted. It illustrates the sequencing rule that contr
 | External forecast buyer / paid repeat | Not proven |
 | Production forecast deployment | Not claimed |
 
-## What I personally own and can explain
+## Engineering decisions I own and can explain
 
 - why I chose to explore forecast evidence as the current product/research direction;
 - the high-level blueprint and proof gates I require before treating a forecast advantage as real;

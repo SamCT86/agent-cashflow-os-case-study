@@ -26,6 +26,6 @@ This repository is a **public research / engineering case study**, not an open-s
 
 ## Why
 
-The employer-facing signal is the discipline: **define the claim before the result, preserve provenance, compare against adequate alternatives, and refuse to call an unproven hypothesis a product advantage.**
+The public engineering value is the discipline: **define the claim before the result, preserve provenance, compare against adequate alternatives, and refuse to call an unproven hypothesis a product advantage.**
 
 Public does not mean open source. No license to the private implementation is granted or implied by this case study.

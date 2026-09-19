@@ -19,7 +19,7 @@ Agent Cashflow is built with heavy use of AI agents/models. My role is to define
 - edge-case and test generation;
 - technical review and documentation.
 
-I do **not** claim that I independently selected or hand-authored every contract, provenance mechanism, benchmark implementation, ledger structure or code path.
+AI assistance is explicit, but it does not outsource accountability: I review resulting behavior, debug failures, set acceptance gates and decide what is accepted or rejected.
 
 ## Working loop
 
