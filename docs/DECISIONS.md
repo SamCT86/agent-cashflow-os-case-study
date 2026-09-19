@@ -2,7 +2,7 @@
 
 These are requirements and trade-offs represented by the current Agent Cashflow research/build direction. They explain the product/system boundary without claiming that I personally originated every low-level engineering or statistical choice used to implement it.
 
-My direct ownership is the product/research direction, high-level blueprint, expert/persona orchestration, constraints, acceptance criteria and quality gates. The implementation process is heavily AI-assisted.
+AI tools are part of the implementation workflow. I own the product/system boundary, architecture constraints, review and debugging loop, acceptance criteria and quality gates.
 
 ## 1. Freeze the meaning before measuring performance
 

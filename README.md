@@ -5,11 +5,11 @@
 **Current hypothesis:** Agent Forecast Evidence  
 **Portfolio:** https://sarmadtawfeek.se/
 
-## Current status and fast review
+## Current status
 
 The active product build is currently **paused pending explicit resume**. The underlying machine-native substrate and forecast-evidence research direction remain useful engineering evidence, but this repository should not be read as an active launch claim.
 
-For the fastest technical review:
+Public notes and artifacts:
 
 1. [Current public status — 2026-09-19](CURRENT_PUBLIC_STATUS.md)
 2. [Observable proof](PROOF.md)
@@ -18,11 +18,11 @@ For the fastest technical review:
 5. [Verification approach](docs/VERIFICATION.md)
 6. [Public / private boundary](PUBLIC_BOUNDARY.md)
 
-## My role in this build
+## Engineering ownership
 
-I researched the product/research direction, chose the problem to pursue, defined the high-level blueprint and quality expectations, and used specialist AI personas/agents to drive implementation, critique and iteration.
+AI tools are part of my implementation workflow. I use them to accelerate investigation, implementation, testing and review, while remaining accountable for the system boundary, architecture constraints, code review, debugging, acceptance criteria and the decision to ship or reject a change.
 
-The implementation is heavily AI-assisted. I do **not** claim that I personally hand-wrote every line of code or independently selected every low-level technical mechanism. My direct ownership is the product hypothesis, system requirements, expert/persona orchestration, acceptance criteria and quality gates.
+The useful question here is not who typed each token. It is whether the behavior is explicit, testable, reproducible and safe under failure. The executable tests and design trade-offs in this repository are the public evidence for that claim.
 
 The current question is deliberately empirical:
 
@@ -74,21 +74,11 @@ If the meaning of a forecast can move after the outcome is known, or development
 
 The research direction therefore requires contract/evaluation semantics to be frozen before stronger performance claims are accepted.
 
-## How AI fits
-
-AI agents/models are used heavily for implementation, hypothesis exploration, evaluation critique, test ideas, review and iteration.
-
-My role is to define the product/research question, blueprint the required system behavior, structure the expert/persona workflow, set the quality bar and refuse stronger claims until the evidence gate is met.
-
-More detail: [docs/HOW_I_BUILD_WITH_AI.md](docs/HOW_I_BUILD_WITH_AI.md)
-
 ## Technical context
 
 `Node.js` · `deterministic contracts` · `SHA-256 provenance concepts` · `automated tests` · `held-out evaluation design` · `idempotency / replay safety`
 
-Technology is implementation context, not a claim that I personally selected or hand-authored every component.
-
-## Inspect the case study
+## Repository map
 
 - [Current public status](CURRENT_PUBLIC_STATUS.md)
 - [Observable proof](PROOF.md)
@@ -108,11 +98,10 @@ Technology is implementation context, not a claim that I personally selected or 
 - paid forecast repeat use;
 - production forecast deployment;
 - product-market fit;
-- personal authorship of every implementation detail.
 
-The point of this project today is to show how I direct and quality-gate an AI-assisted technical/research build while keeping implemented substrate separate from an unproven product advantage.
+The point of this project today is to preserve the research and engineering record without presenting a paused hypothesis as an active product.
 
-## Related engineering case studies
+## Related public references
 
 - [MachineOutcome](https://github.com/SamCT86/machineoutcome-case-study) — outcome verification before reliability and delegation claims.
 - [ReleaseProof](https://github.com/SamCT86/releaseproof-case-study) — exact-artifact evidence and reproducible rechecks.
