@@ -1,9 +1,22 @@
 # Agent Cashflow OS — forecast evidence, not forecast theater
 
 **Sarmad Tawfeek · AI systems · technical implementation · automation**  
-**Status:** Research / Building  
+**Status:** Product build paused · research / engineering asset  
 **Current hypothesis:** Agent Forecast Evidence  
 **Portfolio:** https://sarmadtawfeek.se/
+
+## Current status and fast review
+
+The active product build is currently **paused pending explicit resume**. The underlying machine-native substrate and forecast-evidence research direction remain useful engineering evidence, but this repository should not be read as an active launch claim.
+
+For the fastest technical review:
+
+1. [Current public status — 2026-09-19](CURRENT_PUBLIC_STATUS.md)
+2. [Observable proof](PROOF.md)
+3. [Sanitized forecast record](examples/sanitized-forecast-record.json)
+4. [System view](docs/SYSTEM_VIEW.md)
+5. [Verification approach](docs/VERIFICATION.md)
+6. [Public / private boundary](PUBLIC_BOUNDARY.md)
 
 ## My role in this build
 
@@ -29,7 +42,7 @@ The private implementation contains a preserved machine-native substrate with:
 - an economic ledger;
 - an x402 / Base Sepolia proof path.
 
-The **forecast-specific product edge is still a hypothesis**. The current direction is to make forecast semantics, forecast/outcome identity, calibration state and held-out benchmark rules explicit before claiming advantage.
+The **forecast-specific product edge is still a hypothesis**. The relevant proof direction remains to make forecast semantics, forecast/outcome identity, calibration state and held-out benchmark rules explicit before claiming advantage.
 
 **Start with the evidence layer:** [PROOF.md](PROOF.md)
 
@@ -77,6 +90,7 @@ Technology is implementation context, not a claim that I personally selected or 
 
 ## Inspect the case study
 
+- [Current public status](CURRENT_PUBLIC_STATUS.md)
 - [Observable proof](PROOF.md)
 - [Sanitized forecast record](examples/sanitized-forecast-record.json)
 - [System view](docs/SYSTEM_VIEW.md)
@@ -86,6 +100,7 @@ Technology is implementation context, not a claim that I personally selected or 
 
 ## Not claimed
 
+- an active product launch;
 - a finished forecast engine;
 - a qualified real held-out corpus;
 - measured forecast advantage;
