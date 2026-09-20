@@ -1,85 +1,94 @@
-# Agent Forecast Foundry — bounded Applied AI runtime reference
+# Agent Forecast Foundry â€” Applied AI runtime reference
 
 [![Public Agent Runtime Reference](https://github.com/SamCT86/agent-forecast-foundry-case-study/actions/workflows/reference-tests.yml/badge.svg)](https://github.com/SamCT86/agent-forecast-foundry-case-study/actions/workflows/reference-tests.yml)
 
-**Public status:** Runnable engineering reference  
-**Private system:** broader forecast / evaluation implementation remains private  
+**Status:** runnable public engineering reference
 **Portfolio:** https://sarmadtawfeek.se/
 
-This repository now exposes one narrow mechanism from a larger private Applied AI system: **accept an agent result only when its evidence references, uncertainty state, latency and cost stay inside predeclared runtime bounds.**
+## Problem
 
-It is intentionally small. The point is not to publish a product or claim forecasting edge. The point is to make an important AI-systems invariant inspectable in code.
+A successful model response is not the same thing as a trustworthy system outcome. An agent run can still be unusable because it cited inputs outside the authorized run, exceeded latency or cost bounds, returned incomplete provider state, or persisted data that should never leave the execution boundary.
 
-## Run it
+This repository makes that boundary inspectable in code.
+
+## Execution path
+
+```text
+bound request + evidence refs
+â†’ OpenAI Responses API adapter
+â†’ strict JSON-schema output
+â†’ provider status + token/cost/latency telemetry
+â†’ deterministic runtime verification
+â†’ ACCEPTED / ABSTAINED / fail closed
+â†’ sanitized JSONL journal
+```
+
+The live-provider adapter targets `POST /v1/responses`, sets `store: false`, requests strict `text.format` JSON Schema output, applies a request timeout, and converts provider usage into an explicit cost estimate supplied by the caller.
+
+## Run the public verification
 
 ```bash
 npm test
+npm run eval
 ```
 
-The public reference has zero runtime dependencies and uses synthetic inputs only.
+`npm test` runs the unit/integration-safe reference suite. `npm run eval` runs a small synthetic fixture set and reports pass/fail per case.
 
-## What the runnable reference proves
+CI and the default test path make **no live model call and spend no API budget**. The OpenAI adapter is exercised with an injected HTTP boundary so request shape, schema binding, telemetry handling and failure semantics are deterministic in CI.
 
-`src/runtime-gate.mjs` demonstrates a bounded post-model verification layer:
+## Inspect the implementation
 
-- every output reference must resolve to an input explicitly bound to the run;
-- probability values are range checked;
-- abstention is preserved instead of converted into fake confidence;
-- latency and cost are checked against predeclared limits;
-- incomplete provider status fails closed;
-- hidden reasoning / raw secret persistence fields are rejected;
-- accepted output is reduced to a small auditable result surface.
+- [`src/runtime-gate.mjs`](src/runtime-gate.mjs) â€” runtime contract, real Responses API adapter, cost/latency accounting, sanitized journaling and offline eval evaluator.
+- [`test/execution-path.test.mjs`](test/execution-path.test.mjs) â€” provider/request boundary, persistence and transport failure tests.
+- [`test/runtime-gate.test.mjs`](test/runtime-gate.test.mjs) â€” deterministic post-model guard tests.
+- [`eval/fixtures.mjs`](eval/fixtures.mjs) â€” synthetic eval cases.
+- [`tools/run-eval.mjs`](tools/run-eval.mjs) â€” reviewer-facing offline eval command.
+- [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) â€” disclosure boundary.
 
-The tests include both accepted and adversarial cases.
+A reviewer can start at `executeVerifiedRun`, follow the provider call into `createOpenAIResponsesProvider`, then inspect the fail-closed gate and the journal record that survives verification.
 
-## Why this matters for agentic systems
+## Failure cases made explicit
 
-A model response is not the same thing as a trustworthy system outcome.
+The reference fails closed when:
 
-```text
-bounded inputs
-→ model / agent execution
-→ structured output
-→ reference + state + cost + latency verification
-→ ACCEPTED / ABSTAINED / failed closed
-```
+- an output cites an input ref that was not bound to the run;
+- a provider input body attempts to use an unbound ref;
+- provider status is not `completed`;
+- the provider HTTP request fails;
+- latency or estimated cost exceed predeclared bounds;
+- a probability is invalid for the selected decision state;
+- hidden reasoning or raw secret-bearing persistence fields appear;
+- structured provider output cannot be parsed under the expected contract.
 
-That separation lets an application use models aggressively without treating provider success as proof that the surrounding system stayed inside its contract.
+An incomplete provider run is rejected **before** the JSONL journal is written.
 
-## Relation to the private implementation
+## What the eval does â€” and does not prove
 
-The corresponding private implementation goes further and includes a real OpenAI Responses-based execution path, strict structured outputs, specialist-role orchestration, adversarial / meta / calibration stages, input provenance, timeout and spend controls, provider response verification and held-out evaluation machinery.
+The included fixture set checks accepted, abstained and fail-closed behaviors against synthetic records. It is an engineering regression surface, not evidence that the underlying forecasts are accurate.
 
-Those product internals, prompts, live provider evidence and operational controls are intentionally not copied here. This repository publishes only a bounded reference sufficient to inspect the engineering pattern.
+This repository does **not** claim:
 
-## Forecast research boundary
-
-The larger project also investigates whether forecasts frozen before outcomes can earn decision weight after held-out comparison against reasonable alternatives.
-
-That **research hypothesis remains unproven**. This public runtime reference does not claim:
-
-- measured forecast superiority;
-- production forecast deployment;
+- forecast superiority or calibrated advantage over market/cheap alternatives;
+- production deployment or production scale;
 - a qualified commercial benchmark corpus;
-- external buyer adoption;
-- product-market fit.
+- buyer adoption, product-market fit or revenue;
+- live-provider latency/cost from this public CI run.
 
-## Repository map
+## Public / private boundary
 
-- [`src/runtime-gate.mjs`](src/runtime-gate.mjs) — bounded post-model verification logic
-- [`test/runtime-gate.test.mjs`](test/runtime-gate.test.mjs) — executable adversarial cases
-- [`PROOF.md`](PROOF.md) — preserved forecast-evidence work
-- [`docs/SYSTEM_VIEW.md`](docs/SYSTEM_VIEW.md) — broader system view
-- [`docs/DECISIONS.md`](docs/DECISIONS.md) — requirements and trade-offs
-- [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) — public/private boundary
+This code is a standalone public reference written to expose the engineering pattern. It is not a copy of the private product runtime, prompts, benchmark semantics, live evidence, proprietary orchestration or commercial controls.
+
+No credential is stored by the adapter. Raw evidence bodies are sent only to the configured provider call and are deliberately omitted from the persisted run record.
+
+See [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) for the exact disclosure boundary.
+
+## Related proof
+
+- [MachineOutcome](https://github.com/SamCT86/machineoutcome-case-study) â€” observed-state reconciliation and retry safety.
+- [Billable Meetings](https://github.com/SamCT86/billable-meetings-os-case-study) â€” deterministic evidence-to-settlement decisions.
+- [ReleaseProof](https://github.com/SamCT86/releaseproof-case-study) â€” exact-artifact provenance.
+- [PriceBriefs](https://github.com/SamCT86/pricebriefs-case-study) â€” evidence qualification and refusal states.
 
 ## Engineering accountability
 
 AI tools are part of my implementation workflow. I remain accountable for problem framing, architecture constraints, acceptance criteria, verification design, debugging and release decisions.
-
-## Related references
-
-- [MachineOutcome](https://github.com/SamCT86/machineoutcome-case-study) — agent mutation verification and reconciliation.
-- [Billable Meetings](https://github.com/SamCT86/billable-meetings-os-case-study) — deterministic evidence-to-settlement decisions.
-- [ReleaseProof](https://github.com/SamCT86/releaseproof-case-study) — exact-artifact release evidence.
-- [PriceBriefs](https://github.com/SamCT86/pricebriefs-case-study) — evidence-bound market intelligence.
