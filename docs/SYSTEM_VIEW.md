@@ -1,60 +1,40 @@
 # System view
 
-This is a public abstraction of the evaluation flow, not the private implementation architecture.
+This is a simple public view of the evaluation flow. It is not the private production architecture.
 
 ```text
-┌────────────────┐
-│ Forecast request│
-└───────┬────────┘
-        ↓
-┌────────────────────┐
-│ Explicit forecast   │
-│ contract            │
-└─────────┬──────────┘
-          ↓
-┌────────────────────┐
-│ Forecast +          │
-│ provenance          │
-└─────────┬──────────┘
-          ↓
-┌────────────────────┐
-│ Outcome observation│
-└─────────┬──────────┘
-          ↓
-┌────────────────────┐
-│ Held-out /          │
-│ calibration evidence│
-└─────────┬──────────┘
-          ↓
-┌────────────────────┐
-│ Decision support   │
-└────────────────────┘
+forecast request
+-> clear forecast contract
+-> forecast + evidence trail
+-> real outcome
+-> held-out / calibration checks
+-> decision support
 ```
 
-## Boundary 1 — contract semantics
+## 1. Forecast meaning
 
-The forecast needs explicit meaning before its quality can be evaluated.
+The forecast needs a clear definition before anyone knows the outcome.
 
-## Boundary 2 — provenance
+## 2. Evidence trail
 
-The system should preserve enough context to understand which forecast is being evaluated and under what conditions.
+The system should preserve enough context to show which forecast is being evaluated, which inputs were used, and under what conditions.
 
-## Boundary 3 — outcome
+## 3. Outcome
 
-A forecast becomes evaluable only after the relevant outcome exists.
+A forecast can only be judged after the relevant real-world outcome exists.
 
-## Boundary 4 — held-out evaluation
+## 4. Held-out evaluation
 
-Demonstration examples are weak evidence of general advantage. The current research direction emphasizes held-out comparison.
+A good demo is not strong evidence of a general advantage. The approach should also be tested on evidence that was not used to shape the result.
 
-## Boundary 5 — alternatives
+## 5. Alternatives
 
-Any claimed advantage should be compared against simpler, cheaper alternatives rather than only against failure.
+Any claimed advantage should be compared with simpler and cheaper alternatives when possible.
 
-## Boundary 6 — economics
+## 6. Economics
 
-Decision value depends not only on accuracy but also on the cost and latency required to produce the forecast.
+Accuracy is not the only thing that matters. Cost and latency can make a technically stronger forecast less useful in practice.
 
 ## Why this is public
 
-The case study exposes the evaluation logic and product reasoning without publishing exact contracts, benchmark code, ledgers or economic implementation.
+This view shows the reasoning behind the system without publishing private contracts, benchmark code, ledgers, prompts, or commercial implementation details.
