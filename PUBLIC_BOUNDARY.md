@@ -1,31 +1,30 @@
 # Public disclosure boundary
 
-This repository is a **public research / engineering case study**, not an open-source release and not a mirror of the private implementation repository.
+This repository is a **standalone public engineering reference**, not an open-source release of the private Agent Forecast product and not a mirror of its source tree.
 
 ## Intentionally public
 
-- the forecast-evidence problem;
-- the contract → provenance → outcome → evaluation model;
-- selected engineering and evaluation trade-offs;
-- defensible technical context;
-- the AI-assisted workflow at a non-sensitive level;
-- current status and explicit non-claims.
+- a generic Responses API execution adapter;
+- strict structured-output and runtime-verification contracts;
+- synthetic fixtures and adversarial tests;
+- sanitized run-state journaling;
+- token/cost/latency accounting mechanics;
+- offline eval mechanics and explicit failure states;
+- non-sensitive architecture and decision rationale.
 
 ## Intentionally private
 
-- application source code;
-- internal prompts or agent instructions;
-- exact forecast contracts and benchmark semantics;
-- private ledgers and evaluation implementation;
-- raw fixtures, corpora or evidence;
+- private product/application source code;
+- internal prompts, specialist instructions and proprietary orchestration;
+- exact private forecast contracts and benchmark semantics;
+- private ledgers, corpora, raw evidence and live-provider traces;
 - credentials, secrets and environment configuration;
-- private repository paths, SHAs and internal document names;
-- unpublished endpoints;
+- unpublished endpoints, internal repository identities and immutable evidence refs;
 - private economic mechanisms, commercial experiments and roadmap sequencing;
-- implementation details that would materially reproduce the system.
+- any implementation detail whose disclosure would materially reproduce the private system.
 
-## Why
+## Guardrail
 
-The public engineering value is the discipline: **define the claim before the result, preserve provenance, compare against adequate alternatives, and refuse to call an unproven hypothesis a product advantage.**
+Public code must remain reconstructable from the public repository alone. It must not depend on copying private prompts, protected evaluation material, customer/user data, secret provider configuration or unpublished commercial logic.
 
-Public does not mean open source. No license to the private implementation is granted or implied by this case study.
+The engineering claim is limited to what a reviewer can inspect and run here. No license to the private implementation is granted or implied by this case study.
