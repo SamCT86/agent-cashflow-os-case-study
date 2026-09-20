@@ -1,48 +1,44 @@
-# How I direct the AI-assisted Agent Cashflow build
+# How I build with AI
 
-Agent Cashflow is built with heavy use of AI agents/models. My role is to define and direct the product/research system, not to claim authorship of every line of code.
+I use AI tools heavily in this project. I do not treat that as a shortcut around engineering responsibility.
+
+My role is to decide what problem is worth solving, define the system boundaries, set the quality bar, review the behavior, debug failures, and decide what is accepted or rejected.
 
 ## What I own
 
-- researching the product/research opportunity and choosing the hypothesis to pursue;
-- defining the high-level blueprint and the proof gates needed before stronger claims are accepted;
-- creating specialist personas/experts and assigning them responsibilities;
-- setting constraints, acceptance criteria and quality gates;
-- requiring held-out evidence, calibration thinking and explicit unproven states;
-- sending work back for revision when it does not meet the system or quality requirements.
+- choosing the product or research question;
+- deciding what evidence would be strong enough to support a claim;
+- defining the high-level architecture and safety boundaries;
+- setting acceptance criteria and test requirements;
+- deciding when a result is still unknown or unproven;
+- reviewing and revising work that does not meet the bar.
 
-## What AI handles heavily
+## Where AI helps most
 
-- implementation and code generation/revision;
-- hypothesis and technical-option exploration;
-- benchmark/evaluation critique;
-- edge-case and test generation;
-- technical review and documentation.
+- implementation and code revision;
+- exploring technical options;
+- generating edge cases and tests;
+- challenging assumptions;
+- reviewing documentation and code;
+- speeding up research and iteration.
 
-AI assistance is explicit, but it does not outsource accountability: I review resulting behavior, debug failures, set acceptance gates and decide what is accepted or rejected.
-
-## Working loop
+## My working loop
 
 ```text
-research hypothesis
-        ↓
-define product + blueprint + proof gates
-        ↓
-assign specialist AI personas / agents
-        ↓
-AI-assisted implementation and iteration
-        ↓
-held-out / evidence / quality gates
-        ↓
-accept, revise or reject the hypothesis
+choose the real problem
+-> define constraints and proof requirements
+-> use AI to explore and implement
+-> test the result against failures and edge cases
+-> inspect the evidence
+-> accept, revise, or reject
 ```
 
-The quality bar requires a forecast claim to survive evidence rather than presentation. The low-level mechanism used to satisfy that bar may come from the AI-assisted implementation process unless I explicitly state otherwise.
+AI can generate a lot of output quickly. That makes the review loop more important, not less important.
 
-## Interview boundary
+## What I can explain myself
 
-I can explain the product/research problem, why the hypothesis matters, the blueprint and proof gates I required, how I structured the AI workflow, and what is implemented versus still unproven.
+I can explain the problem, why I chose the approach, the system boundaries, the evidence requirements, what failed during implementation, what changed, and what remains unproven.
 
-For a low-level technical or statistical choice, I will distinguish between **a requirement I set** and **a technical choice made inside the AI-assisted implementation process**.
+For a low-level technical or statistical choice that came from the AI-assisted implementation process, I say so rather than presenting every line or technique as manual authorship.
 
 For concrete implementation evidence, see [../PROOF.md](../PROOF.md).
