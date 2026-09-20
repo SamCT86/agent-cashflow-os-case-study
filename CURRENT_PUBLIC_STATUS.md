@@ -1,26 +1,26 @@
-# Current public status — 2026-09-19
+# Current public status - 2026-09-20
 
-**Product build status: PAUSED pending explicit resume.**
+**Public reference: active. Commercial product claims: not made.**
 
-Agent Cashflow OS remains a research/engineering asset around **Agent Forecast Evidence** and the `forecast_event` hypothesis. The preserved machine-native substrate and research gates remain useful evidence, but the active product build is not currently advancing toward exposure or launch.
+Agent Forecast Foundry is maintained as a public engineering reference for how I approach forecast evidence, agent verification, and evaluation. It is useful as proof of engineering and product reasoning, but it should not be read as a claim that a forecasting product is launched, commercially validated, or proven to outperform alternatives.
 
-## What remains true
+## What is real today
 
-- The primary hypothesis remains calibrated forecast evidence for autonomous prediction / market-decision agents.
-- The underlying request / payment / work / outcome / settlement substrate remains an implemented engineering asset.
-- Forecast semantics, provenance, calibration and leakage-safe held-out evaluation remain the relevant proof gates before any stronger advantage claim.
-- Measured forecast advantage, a qualified external buyer, paid repeat use and production forecast deployment remain unproven.
+- The public runtime reference is runnable and tested.
+- The broader private work includes request, payment, work, outcome, and settlement mechanics.
+- Forecast identity, provenance, calibration, and held-out evaluation remain important proof requirements.
+- Measured forecast advantage, a qualified external buyer, paid repeat use, and production forecast deployment are not proven here.
 
-## Why this matters for evaluation
+## Why this file exists
 
-This case study should be read as evidence of product/research framing, machine-native system design and evidence discipline — **not** as an active launch claim.
+I want a reviewer to be able to tell the difference between **what has been built** and **what is still a hypothesis** without reading between the lines.
 
-The build should only move back to active status after an explicit resume decision and fresh verification of current source/runtime state.
+This repository is evidence of system design, implementation, and verification discipline. It is not an active launch announcement.
 
-## Fast evaluator path
+## Fast review path
 
-1. [`README.md`](README.md) — product/research question and ownership boundary.
-2. [`PROOF.md`](PROOF.md) — implemented substrate vs unproven forecast edge.
-3. [`examples/sanitized-forecast-record.json`](examples/sanitized-forecast-record.json) — public sequencing example.
-4. [`docs/VERIFICATION.md`](docs/VERIFICATION.md) — evidence requirements.
-5. [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) — proprietary/public boundary.
+1. [`README.md`](README.md) - what the public reference does and how to run it.
+2. [`PROOF.md`](PROOF.md) - what is implemented and what remains unproven.
+3. [`examples/sanitized-forecast-record.json`](examples/sanitized-forecast-record.json) - a synthetic sequencing example.
+4. [`docs/VERIFICATION.md`](docs/VERIFICATION.md) - how stronger claims would need to be tested.
+5. [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) - what stays public and what stays private.
