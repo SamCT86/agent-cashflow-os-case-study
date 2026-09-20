@@ -1,74 +1,83 @@
-# Agent Cashflow OS — paused forecast-evidence research
+# Agent Forecast Foundry — bounded Applied AI runtime reference
 
-**Status:** Paused research / engineering asset  
-**Current hypothesis:** Agent Forecast Evidence  
+**Public status:** Runnable engineering reference  
+**Private system:** broader forecast / evaluation implementation remains private  
 **Portfolio:** https://sarmadtawfeek.se/
 
-This repository preserves a research direction and engineering record. It is **not** presented as an active product launch.
+This repository now exposes one narrow mechanism from a larger private Applied AI system: **accept an agent result only when its evidence references, uncertainty state, latency and cost stay inside predeclared runtime bounds.**
 
-## Current question
+It is intentionally small. The point is not to publish a product or claim forecasting edge. The point is to make an important AI-systems invariant inspectable in code.
 
-> Can an agent forecast be frozen before the outcome, tied to provenance, and later evaluated against adequate alternatives strongly enough to earn decision weight?
+## Run it
 
-This repository does not claim that forecast superiority is already proven.
-
-## What exists
-
-The private implementation contains a preserved machine-native substrate with:
-
-- request / payment / work / outcome / settlement flow;
-- idempotency and replay-safety mechanisms;
-- deterministic schemas;
-- provenance handling;
-- traffic classification;
-- an economic ledger;
-- an x402 / Base Sepolia proof path.
-
-The forecast-specific edge remains a hypothesis. The required proof path is explicit forecast semantics, stable forecast/outcome identity, calibration state and held-out evaluation against reasonable baselines.
-
-## Research contract
-
-```text
-forecast contract frozen before outcome
-→ forecast + provenance
-→ outcome becomes observable
-→ held-out comparison
-→ adequate baselines
-→ calibration + cost + latency
-→ advantage proven / not proven
+```bash
+npm test
 ```
 
-A compelling example is insufficient. Evaluation must resist post-outcome reframing and development-set leakage.
+The public reference has zero runtime dependencies and uses synthetic inputs only.
 
-## Engineering process
+## What the runnable reference proves
 
-AI tools are part of the implementation workflow. I remain accountable for system boundaries, architecture constraints, code review, debugging, acceptance criteria, tests and release decisions.
+`src/runtime-gate.mjs` demonstrates a bounded post-model verification layer:
+
+- every output reference must resolve to an input explicitly bound to the run;
+- probability values are range checked;
+- abstention is preserved instead of converted into fake confidence;
+- latency and cost are checked against predeclared limits;
+- incomplete provider status fails closed;
+- hidden reasoning / raw secret persistence fields are rejected;
+- accepted output is reduced to a small auditable result surface.
+
+The tests include both accepted and adversarial cases.
+
+## Why this matters for agentic systems
+
+A model response is not the same thing as a trustworthy system outcome.
+
+```text
+bounded inputs
+→ model / agent execution
+→ structured output
+→ reference + state + cost + latency verification
+→ ACCEPTED / ABSTAINED / failed closed
+```
+
+That separation lets an application use models aggressively without treating provider success as proof that the surrounding system stayed inside its contract.
+
+## Relation to the private implementation
+
+The corresponding private implementation goes further and includes a real OpenAI Responses-based execution path, strict structured outputs, specialist-role orchestration, adversarial / meta / calibration stages, input provenance, timeout and spend controls, provider response verification and held-out evaluation machinery.
+
+Those product internals, prompts, live provider evidence and operational controls are intentionally not copied here. This repository publishes only a bounded reference sufficient to inspect the engineering pattern.
+
+## Forecast research boundary
+
+The larger project also investigates whether forecasts frozen before outcomes can earn decision weight after held-out comparison against reasonable alternatives.
+
+That **research hypothesis remains unproven**. This public runtime reference does not claim:
+
+- measured forecast superiority;
+- production forecast deployment;
+- a qualified commercial benchmark corpus;
+- external buyer adoption;
+- product-market fit.
 
 ## Repository map
 
-- [Current public status](CURRENT_PUBLIC_STATUS.md)
-- [Observable proof](PROOF.md)
-- [Sanitized forecast record](examples/sanitized-forecast-record.json)
-- [System view](docs/SYSTEM_VIEW.md)
-- [System requirements & trade-offs](docs/DECISIONS.md)
-- [Verification approach](docs/VERIFICATION.md)
-- [Public / private boundary](PUBLIC_BOUNDARY.md)
+- [`src/runtime-gate.mjs`](src/runtime-gate.mjs) — bounded post-model verification logic
+- [`test/runtime-gate.test.mjs`](test/runtime-gate.test.mjs) — executable adversarial cases
+- [`PROOF.md`](PROOF.md) — preserved forecast-evidence work
+- [`docs/SYSTEM_VIEW.md`](docs/SYSTEM_VIEW.md) — broader system view
+- [`docs/DECISIONS.md`](docs/DECISIONS.md) — requirements and trade-offs
+- [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) — public/private boundary
 
-## Scope
+## Engineering accountability
 
-Not claimed here:
+AI tools are part of my implementation workflow. I remain accountable for problem framing, architecture constraints, acceptance criteria, verification design, debugging and release decisions.
 
-- an active product launch;
-- a finished forecast engine;
-- a qualified real held-out corpus;
-- measured forecast advantage;
-- an external forecast buyer;
-- paid repeat use;
-- production forecast deployment;
-- product-market fit.
+## Related references
 
-## Related public references
-
-- [MachineOutcome](https://github.com/SamCT86/machineoutcome-case-study) — outcome verification before reliability and delegation claims.
-- [ReleaseProof](https://github.com/SamCT86/releaseproof-case-study) — exact-artifact evidence and reproducible rechecks.
-- [PriceBriefs](https://github.com/SamCT86/pricebriefs-case-study) — deterministic decision support with evidence-bound refusal states.
+- [MachineOutcome](https://github.com/SamCT86/machineoutcome-case-study) — agent mutation verification and reconciliation.
+- [Billable Meetings](https://github.com/SamCT86/billable-meetings-os-case-study) — deterministic evidence-to-settlement decisions.
+- [ReleaseProof](https://github.com/SamCT86/releaseproof-case-study) — exact-artifact release evidence.
+- [PriceBriefs](https://github.com/SamCT86/pricebriefs-case-study) — evidence-bound market intelligence.
