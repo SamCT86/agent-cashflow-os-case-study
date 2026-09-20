@@ -1,6 +1,6 @@
 # Agent Forecast Foundry — bounded Applied AI runtime reference
 
-[![Public Agent Runtime Reference](https://github.com/SamCT86/agent-cashflow-os-case-study/actions/workflows/reference-tests.yml/badge.svg)](https://github.com/SamCT86/agent-cashflow-os-case-study/actions/workflows/reference-tests.yml)
+[![Public Agent Runtime Reference](https://github.com/SamCT86/agent-forecast-foundry-case-study/actions/workflows/reference-tests.yml/badge.svg)](https://github.com/SamCT86/agent-forecast-foundry-case-study/actions/workflows/reference-tests.yml)
 
 **Public status:** Runnable engineering reference  
 **Private system:** broader forecast / evaluation implementation remains private  
