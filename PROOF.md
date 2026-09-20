@@ -1,68 +1,63 @@
 # Observable proof
 
-This file separates what is already implemented in the private Agent Cashflow source from what remains a forecast research hypothesis.
+This file separates what is already implemented from what is still a forecasting hypothesis.
 
-No private source code, payment credentials, internal contracts, ledgers, prompts or benchmark implementation are copied here.
+No private source code, credentials, internal contracts, ledgers, prompts, or benchmark implementation are copied into this public repository.
 
-**Engineering ownership:** AI assistance is used throughout the implementation workflow. I remain accountable for problem framing, architecture constraints, reviewing and debugging changes, acceptance/test gates and release decisions. Where this document cites behavior that remains in the private implementation, it is labeled as implementation evidence rather than as a claim about manual keystroke authorship.
+## What is already implemented
 
-## Existing engineering substrate
+The broader private implementation includes a machine-oriented request, payment, work, outcome, and settlement flow with:
 
-The current private source explicitly preserves a machine-native request/payment/work/outcome/settlement kernel with:
-
-- idempotency / replay safety;
+- idempotency and replay safety;
 - deterministic schemas;
 - provenance handling;
 - traffic classification;
 - an economic ledger;
 - an x402 / Base Sepolia proof path.
 
-That substrate is real implementation evidence. It is **not** the same as proof that the current forecast hypothesis works.
+Those are real implementation signals. They do **not** prove that the forecasting hypothesis itself is useful or commercially valuable.
 
-## Current forecast work
+## What the forecasting work is trying to prove
 
-The active direction is **Agent Forecast Evidence** around a working operation named `forecast_event`.
+The current direction centers on a `forecast_event` operation and the evidence needed to evaluate it fairly.
 
-The next proof gates are organized around:
+Before making a stronger performance claim, I would want to see:
 
-- freezing forecast semantics before the outcome;
-- freezing forecast/outcome/calibration ledger semantics;
-- held-out comparison against cheap adequate alternatives;
-- only exposing a forecast capability after the evaluation gate survives.
+- forecast meaning fixed before the outcome is known;
+- stable forecast and outcome identity;
+- held-out comparison against simple, cheaper alternatives;
+- calibration evidence;
+- cost and latency included in the evaluation;
+- a result that survives leakage checks.
 
-These are current build/evaluation gates, not completed market proof.
+These are proof gates, not completed market proof.
 
-## What would falsify the hypothesis
+## What would falsify the idea
 
-A forecast mechanism should fail the product thesis if held-out performance does not beat an adequate cheap baseline, the apparent advantage depends on leakage, the advantage disappears once variable cost is included, latency makes the decision unusable, confidence is poorly calibrated, or the result cannot be connected to a stable forecast/outcome identity.
+I would reject the forecasting thesis if the apparent advantage disappears on held-out data, depends on leakage, loses once cost or latency are included, is poorly calibrated, or cannot be tied to a stable forecast/outcome pair.
 
 ## Sanitized forecast record
 
 See [examples/sanitized-forecast-record.json](examples/sanitized-forecast-record.json).
 
-The example is synthetic/redacted. It illustrates the sequencing rule that contract and forecast identity exist before the outcome and before evaluation.
+The example is synthetic and redacted. Its purpose is to show the sequencing rule: forecast identity and meaning exist before the outcome and before evaluation.
 
 ## Implemented vs not yet proven
 
-| Area | Public evidence state |
-|---|---|
-| Request/payment/work/outcome/settlement substrate | Implemented / preserved in private source |
-| Idempotency / replay safety | Implemented substrate |
-| Deterministic schemas + provenance | Implemented substrate |
-| `forecast_event` product direction | Current build hypothesis |
-| Frozen held-out benchmark semantics | Current gate / work direction |
-| Measured forecast advantage | Not proven |
+| Area | Current evidence state |
+| --- | --- |
+| Request/payment/work/outcome/settlement mechanics | Implemented in private source |
+| Idempotency / replay safety | Implemented |
+| Deterministic schemas and provenance | Implemented |
+| `forecast_event` direction | Active engineering hypothesis |
+| Held-out benchmark semantics | Evaluation requirement |
+| Measured forecasting advantage | Not proven |
 | Qualified real held-out corpus | Not proven |
-| External forecast buyer / paid repeat | Not proven |
+| External buyer / paid repeat use | Not proven |
 | Production forecast deployment | Not claimed |
 
-## Engineering decisions I own and can explain
+## What I am accountable for
 
-- why I chose to explore forecast evidence as the current product/research direction;
-- the high-level blueprint and proof gates I require before treating a forecast advantage as real;
-- how I structure specialist AI personas/agents to research, build, critique and revise the system;
-- why I require explicit unproven states rather than turning a build into a performance claim;
-- what the current implementation evidence establishes and what remains hypothesis;
-- how I direct further iteration or rejection when AI-generated work does not meet the quality/evidence bar.
+I use AI heavily during implementation. I remain responsible for the problem choice, system boundaries, architecture constraints, acceptance criteria, review, debugging, tests, and the decision to accept or reject a result.
 
-For a specific benchmark implementation, statistical technique, contract shape, provenance mechanism or code path, I distinguish between **implementation evidence** and **a decision I personally made**.
+When a low-level statistical or implementation detail came from the AI-assisted process, I do not present that as manual authorship. I distinguish between **evidence that the implementation exists** and **decisions I personally made and can defend**.
