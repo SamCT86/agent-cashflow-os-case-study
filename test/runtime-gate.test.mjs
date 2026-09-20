@@ -78,7 +78,7 @@ test('rejects hidden reasoning or raw secret persistence fields', () => {
   assert.throws(
     () => evaluateBoundedAgentRun({
       ...base,
-      response: { ...base.response, hiddenReasoning: 'private chain', apiKey: 'sk-not-real' },
+      response: { ...base.response, hiddenReasoning: 'private chain', apiKey: 'example-redacted-key' },
     }),
     /FORBIDDEN_PERSISTENCE_FIELD/,
   );
