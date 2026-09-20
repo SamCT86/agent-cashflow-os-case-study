@@ -1,39 +1,39 @@
 # Verification approach
 
-Agent Cashflow OS treats forecast quality as an empirical question rather than a property of how convincing the output looks.
+Agent Forecast Foundry treats forecast quality as something that must be measured, not inferred from how convincing an answer looks.
 
-## Verification layers
+## What needs to be true
 
-### 1. Contract
-The forecast must have explicit semantics before the outcome is known.
+### 1. Clear forecast meaning
+The forecast must be defined before the outcome is known.
 
-### 2. Identity and provenance
-The forecast and later outcome need stable enough identity to be evaluated as the intended pair.
+### 2. Stable identity and evidence
+The system needs enough provenance to connect the right forecast with the right later outcome.
 
-### 3. Outcome
-The system needs the relevant real outcome before it can assess forecast performance.
+### 3. A real outcome
+A forecast cannot be evaluated until the relevant outcome exists.
 
-### 4. Held-out comparison
-Performance should be evaluated on held-out evidence rather than only on examples used during development.
+### 4. Held-out testing
+Performance should be checked on evidence that was not used to shape the result.
 
-### 5. Baselines
-A forecast mechanism should be compared against cheap adequate alternatives when comparable.
+### 5. Simple baselines
+A more complex method should be compared with cheaper, simpler alternatives when that comparison is possible.
 
 ### 6. Calibration
-The system direction includes calibration-state concepts so confidence can be evaluated rather than merely displayed.
+Confidence should be tested against what actually happens, not just displayed as a number.
 
-### 7. Economics
-Any technical advantage should still be examined through cost and latency.
+### 7. Cost and latency
+A technical advantage only matters if it remains useful after cost and response time are included.
 
-## What AI-assisted implementation must survive
+## Questions the implementation must survive
 
-- Was the forecast contract frozen before the outcome?
-- Is provenance sufficient to connect the forecast and outcome?
-- Is the evaluation leakage-safe enough for the claim?
-- Does the mechanism beat an adequate baseline?
-- Does the advantage survive cost and latency?
-- Is the conclusion still “not proven” when the evidence is incomplete?
+- Was the forecast meaning fixed before the outcome?
+- Can we prove which evidence belonged to the run?
+- Is the evaluation protected from obvious leakage?
+- Does the approach beat a reasonable baseline?
+- Does any advantage survive cost and latency?
+- Do we still say "not proven" when the evidence is incomplete?
 
 ## Public limit
 
-The private implementation contains the exact forecast contracts, benchmark semantics, ledger structures and evaluation code. Those are intentionally not published here.
+The exact private forecast contracts, benchmark implementation, ledger structures, and evaluation code are intentionally not published here.
