@@ -13,7 +13,7 @@ A run can still be unsafe or unusable if it uses the wrong evidence, exceeds a c
 
 ```text
 request + allowed evidence
--> runId + request-fingerprint replay guard
+-> runId + request-fingerprint claim/replay guard (single host)
 -> OpenAI Responses API adapter
 -> strict JSON Schema output
 -> provider status + token/cost/latency data
@@ -45,6 +45,8 @@ The default test and CI paths do **not** make a live model call or spend API bud
 - [`eval/fixtures.mjs`](eval/fixtures.mjs) - synthetic eval cases.
 - [`tools/run-eval.mjs`](tools/run-eval.mjs) - reviewer-facing eval command.
 - [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) - what is public and what stays private.
+- [`sdocs/VERIFICATION.md`](docs/VERIFICATION.md) - how stronger claims would need to be tested.
+- [`docs/CONCURRENCY.md`](docs/CONCURRENCY.md) - the exact single-host claim/replay boundary and its non-guarantees.
 
 If you want to review the flow, start at `executeVerifiedRun`, follow the provider call into `createOpenAIResponsesProvider`, then inspect the verification gate and the journal record that is allowed to survive it.
 
@@ -54,13 +56,14 @@ The run fails closed when:
 
 - output cites evidence that was not bound to the run;
 - provider input tries to use an unbound reference;
-- provider status is not `completed`;
+- provider status is not `complete`;
 - the provider request fails;
 - latency or estimated cost exceeds the declared limit;
 - a probability is invalid for the chosen decision state;
 - hidden reasoning or secret-bearing fields would be persisted;
 - structured output cannot be parsed under the expected contract;
-- a persisted `runId` is reused with a different request fingerprint.
+- a persisted `runId` is reused with a different request fingerprint;
+- an active concurrent claim for the same `runId` carries a conflicting request fingerprint.
 
 An incomplete provider run is rejected **before** the JSONL journal is written. An exact sequential retry of an already-persisted `runId` returns the prior verified record without calling the provider again.
 
@@ -68,7 +71,7 @@ An incomplete provider run is rejected **before** the JSONL journal is written. 
 
 The included fixtures test accepted, abstained, and fail-closed behavior against synthetic records. They are useful regression tests for the runtime.
 
-They do **not** prove that the underlying forecasts are accurate, better than alternatives, production-scale, commercially adopted, or running with live-provider cost/latency measurements in public CI. The persisted replay guard is a sequential journal-level safety mechanism; it is **not** a distributed exactly-once guarantee for concurrent workers.
+They do **not** prove that the underlying forecasts are accurate, better than alternatives, production-scale, commercially adopted, or running with live-provider cost/latency measurements in public CI. The runtime also uses an atomic claim file to coordinate concurrent attempts for the same `runId` across Node processes sharing one local filesystem. Tests verify one provider execution for two concurrent processes, fail-closed fingerprint conflicts, stale-claim recovery, and claim release after provider failure. This is **not** a distributed exactly-once guarantee: separate hosts/filesystems and a crash after an external provider side effect but before journal persistence still require reconciliation.
 
 ## Public and private boundary
 
