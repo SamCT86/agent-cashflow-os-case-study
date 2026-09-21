@@ -40,6 +40,21 @@ export const fixtures = [
     expectedVerdict: 'ABSTAINED',
   },
   {
+    name: 'insufficient evidence abstains',
+    run: {
+      request: { ...request, runId: 'eval-insufficient' },
+      response: {
+        ...response,
+        output: {
+          decision: 'INSUFFICIENT_EVIDENCE', pYes: null, uncertainty: 'HIGH',
+          strongestLimitation: 'Synthetic evidence is insufficient',
+          inputRefsUsed: ['evidence:a1'],
+        },
+      },
+    },
+    expectedVerdict: 'ABSTAINED',
+  },
+  {
     name: 'unbound reference rejected',
     run: {
       request: { ...request, runId: 'eval-unbound' },
