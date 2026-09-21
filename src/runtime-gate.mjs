@@ -1,4 +1,4 @@
-import { appendFile } from 'node:fs/promises';
+import { appendFile, readFile } from 'node:fs/promises';
 
 const allowedDecisions = new Set(['FORECAST', 'NO_EDGE', 'MARKET_PRIOR_ADEQUATE', 'INSUFFICIENT_EVIDENCE', 'UNSUPPORTED', 'ABSTAIN']);
 const allowedUncertainty = new Set(['LOW', 'MEDIUM', 'HIGH']);
@@ -191,9 +191,32 @@ export function createOpenAIResponsesProvider({
   };
 }
 
+async function assertRunIdNotRecorded(journalPath, runId) {
+  let journal;
+  try {
+    journal = await readFile(journalPath, 'utf8');
+  } catch (error) {
+    if (error?.code === 'ENOENT') return;
+    throw error;
+  }
+
+  for (const line of journal.split('\n')) {
+    if (line.trim() === '') continue;
+    let record;
+    try {
+      record = JSON.parse(line);
+    } catch {
+      fail('INVALID_JOURNAL_RECORD');
+    }
+    if (record?.runId === runId) fail('RUN_ALREADY_RECORDED', runId);
+  }
+}
+
 export async function executeVerifiedRun({ request, provider, journalPath } = {}) {
   if (typeof provider !== 'function') fail('PROVIDER_REQUIRED');
   nonEmptyString(journalPath, 'journalPath');
+  const runId = nonEmptyString(request?.runId, 'runId');
+  await assertRunIdNotRecorded(journalPath, runId);
 
   const response = await provider({ request });
   const verdict = evaluateBoundedAgentRun({ request, response });
