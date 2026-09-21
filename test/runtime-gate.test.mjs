@@ -74,6 +74,28 @@ test('preserves abstention instead of manufacturing a probability', () => {
   assert.deepEqual(result, { verdict: 'ABSTAINED', runId: 'run-001', decision: 'ABSTAIN', pYes: null });
 });
 
+test('treats insufficient-evidence and unsupported decisions as abstained', () => {
+  for (const decision of ['INSUFFICIENT_EVIDENCE', 'UNSUPPORTED']) {
+    const result = evaluateBoundedAgentRun({
+      ...base,
+      request: { ...base.request, runId: `run-${decision.toLowerCase()}` },
+      response: {
+        ...base.response,
+        output: {
+          decision,
+          pYes: null,
+          uncertainty: 'HIGH',
+          strongestLimitation: 'The requested decision is not supportable from the bound evidence',
+          inputRefsUsed: ['evidence:a1'],
+        },
+      },
+    });
+    assert.equal(result.verdict, 'ABSTAINED');
+    assert.equal(result.decision, decision);
+    assert.equal(result.pYes, null);
+  }
+});
+
 test('rejects hidden reasoning or raw secret persistence fields', () => {
   assert.throws(
     () => evaluateBoundedAgentRun({
