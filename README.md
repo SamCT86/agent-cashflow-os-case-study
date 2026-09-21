@@ -25,6 +25,8 @@ The provider adapter calls `POST /v1/responses`, sets `store: false`, asks for s
 
 ## Try it
 
+Prerequisite: Node.js 22.
+
 ```bash
 npm test
 npm run eval
