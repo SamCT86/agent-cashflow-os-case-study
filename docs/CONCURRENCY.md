@@ -5,11 +5,12 @@ This reference coordinates concurrent attempts for the same `runId` before a pro
 The mechanism is intentionally small and inspectable:
 
 1. Hash the `runId` into a claim-file path next to the journal.
-2. Acquire the claim with atomic `open(..., 'wx')` semantics.
-3. Store an owner token and the canonical request fingerprint in the claim.
-4. Re-read the journal after winning the claim; replay if another worker already persisted the run.
-5. Execute the provider only when no verified record exists.
-6. Persist the verified record, then release only the claim owned by the current token.
+2. Serialize claim creation/reclaim decisions with a short-lived atomic guard file.
+3. Acquire the run claim with atomic `open(..., 'wx')` semantics.
+4. Store an owner token and the canonical request fingerprint in the claim.
+5. Re-read the journal after winning the claim; replay if another worker already persisted the run.
+6. Execute the provider only when no verified record exists.
+7. Persist the verified record, then release only the claim owned by the current token.
 
 A concurrent request using the same `runId` but a different request fingerprint fails closed. If a stale claim still contains a readable fingerprint, a conflicting fingerprint also fails closed before reclaim. Stale malformed or empty claims may be reclaimed after the TTL because they carry no verifiable conflicting fingerprint.
 
@@ -22,6 +23,7 @@ The public test suite covers:
 - a conflicting in-flight fingerprint fails closed without a second provider call;
 - a stale readable conflicting fingerprint also fails closed before provider execution;
 - a stale malformed/empty claim can be reclaimed;
+- repeated eight-process contention over a stale claim still produces one provider execution and one journal record;
 - a provider failure releases the claim so a later retry can proceed;
 - the journal still contains one verified record for the winning run.
 
