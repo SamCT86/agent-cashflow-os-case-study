@@ -1,4 +1,5 @@
-import { appendFile } from 'node:fs/promises';
+import { appendFile, readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
 
 const allowedDecisions = new Set(['FORECAST', 'NO_EDGE', 'MARKET_PRIOR_ADEQUATE', 'INSUFFICIENT_EVIDENCE', 'UNSUPPORTED', 'ABSTAIN']);
 const abstainingDecisions = new Set(['ABSTAIN', 'INSUFFICIENT_EVIDENCE', 'UNSUPPORTED']);
@@ -193,15 +194,61 @@ export function createOpenAIResponsesProvider({
   };
 }
 
+function canonicalize(value) {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(Object.keys(value).sort().map((key) => [key, canonicalize(value[key])]));
+  }
+  return value;
+}
+
+function fingerprintRequest(request) {
+  return createHash('sha256').update(JSON.stringify(canonicalize(request))).digest('hex');
+}
+
+async function readPersistedRun(journalPath, runId) {
+  let raw;
+  try {
+    raw = await readFile(journalPath, 'utf8');
+  } catch (error) {
+    if (error?.code === 'ENOENT') return null;
+    throw error;
+  }
+
+  let match = null;
+  for (const line of raw.split('\n')) {
+    if (line.trim() === '') continue;
+    let record;
+    try {
+      record = JSON.parse(line);
+    } catch {
+      fail('INVALID_JOURNAL_RECORD');
+    }
+    if (record?.runId === runId) match = record;
+  }
+  return match;
+}
+
 export async function executeVerifiedRun({ request, provider, journalPath } = {}) {
   if (typeof provider !== 'function') fail('PROVIDER_REQUIRED');
   nonEmptyString(journalPath, 'journalPath');
+  if (!request || typeof request !== 'object' || Array.isArray(request)) fail('INVALID_REQUEST');
+
+  const runId = nonEmptyString(request.runId, 'runId');
+  const requestFingerprint = fingerprintRequest(request);
+  const persisted = await readPersistedRun(journalPath, runId);
+  if (persisted) {
+    if (typeof persisted.requestFingerprint !== 'string') fail('IDEMPOTENCY_STATE_UNVERIFIABLE', runId);
+    if (persisted.requestFingerprint !== requestFingerprint) fail('IDEMPOTENCY_KEY_CONFLICT', runId);
+    return Object.freeze({ ...persisted });
+  }
 
   const response = await provider({ request });
   const verdict = evaluateBoundedAgentRun({ request, response });
   const record = Object.freeze({
-    schemaVersion: 1,
+    schemaVersion: 2,
     runId: verdict.runId,
+    requestFingerprint,
     verdict: verdict.verdict,
     decision: verdict.decision,
     pYes: verdict.pYes,

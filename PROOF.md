@@ -47,7 +47,9 @@ The example is synthetic and redacted. Its purpose is to show the sequencing rul
 | Area | Current evidence state |
 | --- | --- |
 | Request/payment/work/outcome/settlement mechanics | Implemented in private source |
-| Idempotency / replay safety | Implemented |
+| Private implementation idempotency / replay safety | Implemented |
+| Public sequential retry / replay guard | Implemented |
+| Distributed concurrent exactly-once execution | Not claimed |
 | Deterministic schemas and provenance | Implemented |
 | `forecast_event` direction | Active engineering hypothesis |
 | Held-out benchmark semantics | Evaluation requirement |

@@ -42,6 +42,8 @@ test('executes, verifies and journals only sanitized run state', async () => {
 
   const result = await runtime.executeVerifiedRun({ request, provider, journalPath });
   assert.equal(result.verdict, 'ACCEPTED');
+  assert.equal(result.schemaVersion, 2);
+  assert.match(result.requestFingerprint, /^[a-f0-9]{64}$/);
   assert.equal(result.providerResponseId, 'resp_synthetic_1');
   assert.deepEqual(result.usage, { inputTokens: 120, outputTokens: 30 });
 
@@ -144,4 +146,61 @@ test('provider requires exact one-to-one coverage of bound input refs', async ()
   };
   await assert.rejects(() => provider({ request: duplicateRequest }), /DUPLICATE_PROVIDER_INPUT_REF/);
   assert.equal(called, false);
+});
+
+test('replays an identical persisted run without calling the provider again', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'aff-idempotent-'));
+  const journalPath = join(dir, 'runs.jsonl');
+  let calls = 0;
+  const provider = async () => {
+    calls += 1;
+    return {
+      status: 'completed', latencyMs: 320, costUsd: 0.004,
+      usage: { inputTokens: 120, outputTokens: 30 },
+      providerResponseId: 'resp_idempotent_1',
+      output: {
+        decision: 'FORECAST', pYes: 0.64, uncertainty: 'MEDIUM',
+        strongestLimitation: 'Synthetic fixture only',
+        inputRefsUsed: ['evidence:a1', 'market:p1'],
+      },
+    };
+  };
+
+  const first = await runtime.executeVerifiedRun({ request, provider, journalPath });
+  const replay = await runtime.executeVerifiedRun({ request, provider, journalPath });
+  const records = (await readFile(journalPath, 'utf8')).trim().split('\n');
+
+  assert.equal(calls, 1);
+  assert.equal(records.length, 1);
+  assert.deepEqual(replay, first);
+});
+
+test('fails closed when a persisted runId is reused for a different request', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'aff-idempotency-conflict-'));
+  const journalPath = join(dir, 'runs.jsonl');
+  let calls = 0;
+  const provider = async () => {
+    calls += 1;
+    return {
+      status: 'completed', latencyMs: 320, costUsd: 0.004,
+      usage: { inputTokens: 120, outputTokens: 30 },
+      providerResponseId: `resp_conflict_${calls}`,
+      output: {
+        decision: 'FORECAST', pYes: 0.64, uncertainty: 'MEDIUM',
+        strongestLimitation: 'Synthetic fixture only',
+        inputRefsUsed: ['evidence:a1', 'market:p1'],
+      },
+    };
+  };
+
+  await runtime.executeVerifiedRun({ request, provider, journalPath });
+  await assert.rejects(
+    () => runtime.executeVerifiedRun({
+      request: { ...request, question: 'A conflicting question under the same run id' },
+      provider,
+      journalPath,
+    }),
+    /IDEMPOTENCY_KEY_CONFLICT/,
+  );
+  assert.equal(calls, 1);
 });

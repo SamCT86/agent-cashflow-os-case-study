@@ -13,6 +13,7 @@ A run can still be unsafe or unusable if it uses the wrong evidence, exceeds a c
 
 ```text
 request + allowed evidence
+-> runId + request-fingerprint replay guard
 -> OpenAI Responses API adapter
 -> strict JSON Schema output
 -> provider status + token/cost/latency data
@@ -58,15 +59,16 @@ The run fails closed when:
 - latency or estimated cost exceeds the declared limit;
 - a probability is invalid for the chosen decision state;
 - hidden reasoning or secret-bearing fields would be persisted;
-- structured output cannot be parsed under the expected contract.
+- structured output cannot be parsed under the expected contract;
+- a persisted `runId` is reused with a different request fingerprint.
 
-An incomplete provider run is rejected **before** the JSONL journal is written.
+An incomplete provider run is rejected **before** the JSONL journal is written. An exact sequential retry of an already-persisted `runId` returns the prior verified record without calling the provider again.
 
 ## What the eval proves - and what it does not
 
 The included fixtures test accepted, abstained, and fail-closed behavior against synthetic records. They are useful regression tests for the runtime.
 
-They do **not** prove that the underlying forecasts are accurate, better than alternatives, production-scale, commercially adopted, or running with live-provider cost/latency measurements in public CI.
+They do **not** prove that the underlying forecasts are accurate, better than alternatives, production-scale, commercially adopted, or running with live-provider cost/latency measurements in public CI. The persisted replay guard is a sequential journal-level safety mechanism; it is **not** a distributed exactly-once guarantee for concurrent workers.
 
 ## Public and private boundary
 
