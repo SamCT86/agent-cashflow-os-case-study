@@ -1,6 +1,7 @@
 import { appendFile } from 'node:fs/promises';
 
 const allowedDecisions = new Set(['FORECAST', 'NO_EDGE', 'MARKET_PRIOR_ADEQUATE', 'INSUFFICIENT_EVIDENCE', 'UNSUPPORTED', 'ABSTAIN']);
+const abstainingDecisions = new Set(['ABSTAIN', 'INSUFFICIENT_EVIDENCE', 'UNSUPPORTED']);
 const allowedUncertainty = new Set(['LOW', 'MEDIUM', 'HIGH']);
 const forbiddenPersistenceFields = new Set(['hiddenReasoning', 'chainOfThought', 'apiKey', 'authorization']);
 
@@ -40,7 +41,7 @@ function validateOutput(output, inputBindings) {
 
   if (output.decision === 'FORECAST') {
     finiteNumber(output.pYes, 'pYes', 0, 1);
-  } else if (output.decision === 'ABSTAIN' || output.decision === 'INSUFFICIENT_EVIDENCE' || output.decision === 'UNSUPPORTED') {
+  } else if (abstainingDecisions.has(output.decision)) {
     if (output.pYes !== null) fail('NON_FORECAST_PROBABILITY_FORBIDDEN');
   } else if (output.pYes !== null) {
     finiteNumber(output.pYes, 'pYes', 0, 1);
@@ -69,7 +70,7 @@ export function evaluateBoundedAgentRun(run) {
   validateOutput(response.output, request.inputBindings);
 
   return Object.freeze({
-    verdict: response.output.decision === 'ABSTAIN' ? 'ABSTAINED' : 'ACCEPTED',
+    verdict: abstainingDecisions.has(response.output.decision) ? 'ABSTAINED' : 'ACCEPTED',
     runId,
     decision: response.output.decision,
     pYes: response.output.pYes,
