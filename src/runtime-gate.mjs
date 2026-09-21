@@ -92,7 +92,15 @@ function extractOutputText(data) {
   return nonEmptyString(outputText, 'providerOutputText');
 }
 
+function validateProviderRequestConfig(request) {
+  finiteNumber(request.maxLatencyMs, 'maxLatencyMs', 1);
+  finiteNumber(request.maxCostUsd, 'maxCostUsd', 0);
+  finiteNumber(request.pricing?.inputUsdPerMillion, 'inputUsdPerMillion', 0);
+  finiteNumber(request.pricing?.outputUsdPerMillion, 'outputUsdPerMillion', 0);
+}
+
 function validateProviderInputs(request) {
+  validateProviderRequestConfig(request);
   nonEmptyString(request.question, 'question');
   if (!Array.isArray(request.inputs) || request.inputs.length === 0) fail('PROVIDER_INPUTS_REQUIRED');
   if (request.inputs.length !== request.inputBindings.length) fail('PROVIDER_INPUT_BINDING_MISMATCH');
