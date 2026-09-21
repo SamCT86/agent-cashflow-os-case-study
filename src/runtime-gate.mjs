@@ -260,57 +260,91 @@ async function unlinkIfExists(path) {
   }
 }
 
-async function acquireRunClaim({ journalPath, runId, requestFingerprint, claimTtlMs }) {
-  const claimPath = claimPathFor(journalPath, runId);
-  const ownerToken = randomUUID();
+async function createRunClaim({ claimPath, ownerToken, requestFingerprint }) {
+  const handle = await open(claimPath, 'wx', 0o600);
+  let written = false;
+  try {
+    await handle.writeFile(`${JSON.stringify({ schemaVersion: 1, ownerToken, requestFingerprint })}\n`, 'utf8');
+    written = true;
+  } finally {
+    try { await handle.close(); } finally {
+      if (!written) await unlinkIfExists(claimPath);
+    }
+  }
+}
 
+async function acquireClaimGuard({ claimPath, claimTtlMs }) {
+  const guardPath = `${claimPath}.guard`;
   while (true) {
     let handle;
     try {
-      handle = await open(claimPath, 'wx', 0o600);
-      await handle.writeFile(`${JSON.stringify({ schemaVersion: 1, ownerToken, requestFingerprint })}\n`, 'utf8');
+      handle = await open(guardPath, 'wx', 0o600);
       await handle.close();
-      return { claimPath, ownerToken };
+      return guardPath;
     } catch (error) {
       if (handle) {
         try { await handle.close(); } catch {}
-        await unlinkIfExists(claimPath);
       }
       if (error?.code !== 'EEXIST') throw error;
     }
 
     let metadata;
     try {
-      metadata = await stat(claimPath);
+      metadata = await stat(guardPath);
     } catch (error) {
       if (error?.code === 'ENOENT') continue;
       throw error;
     }
+    if (Date.now() - metadata.mtimeMs > claimTtlMs) fail('CLAIM_COORDINATION_STUCK');
+    await sleep(10);
+  }
+}
 
-    let activeClaim;
+async function acquireRunClaim({ journalPath, runId, requestFingerprint, claimTtlMs }) {
+  const claimPath = claimPathFor(journalPath, runId);
+  const ownerToken = randomUUID();
+
+  while (true) {
+    const guardPath = await acquireClaimGuard({ claimPath, claimTtlMs });
+    let shouldWait = false;
     try {
-      activeClaim = JSON.parse(await readFile(claimPath, 'utf8'));
+      let metadata;
+      try {
+        metadata = await stat(claimPath);
+      } catch (error) {
+        if (error?.code !== 'ENOENT') throw error;
+        await createRunClaim({ claimPath, ownerToken, requestFingerprint });
+        return { claimPath, ownerToken };
+      }
+
+      let activeClaim;
+      try {
+        activeClaim = JSON.parse(await readFile(claimPath, 'utf8'));
+      } catch (error) {
+        if (error?.code === 'ENOENT') continue;
+        if (!(error instanceof SyntaxError)) throw error;
+        if (Date.now() - metadata.mtimeMs > claimTtlMs) {
+          await unlinkIfExists(claimPath);
+          await createRunClaim({ claimPath, ownerToken, requestFingerprint });
+          return { claimPath, ownerToken };
+        }
+        shouldWait = true;
+      }
+
       if (typeof activeClaim?.requestFingerprint === 'string' && activeClaim.requestFingerprint !== requestFingerprint) {
         fail('IDEMPOTENCY_KEY_CONFLICT', runId);
       }
-    } catch (error) {
-      if (error instanceof SyntaxError || error?.code === 'ENOENT') {
-        if (Date.now() - metadata.mtimeMs > claimTtlMs) {
-          await unlinkIfExists(claimPath);
-          continue;
-        }
-        await sleep(10);
-        continue;
+      if (Date.now() - metadata.mtimeMs > claimTtlMs) {
+        await unlinkIfExists(claimPath);
+        await createRunClaim({ claimPath, ownerToken, requestFingerprint });
+        return { claimPath, ownerToken };
       }
-      throw error;
+      shouldWait = true;
+    } finally {
+      await unlinkIfExists(guardPath);
     }
 
-    if (Date.now() - metadata.mtimeMs > claimTtlMs) {
-      await unlinkIfExists(claimPath);
-      continue;
-    }
-
-    await sleep(10);
+    if (shouldWait) await sleep(10);
   }
 }
 
