@@ -88,6 +88,14 @@ function estimateCostUsd(usage, pricing) {
   return Number(cost.toFixed(9));
 }
 
+function sanitizeUsage(usage) {
+  if (usage == null) return null;
+  return Object.freeze({
+    inputTokens: finiteNumber(usage.inputTokens, 'inputTokens', 0),
+    outputTokens: finiteNumber(usage.outputTokens, 'outputTokens', 0),
+  });
+}
+
 function extractOutputText(data) {
   const message = data?.output?.find((item) => item?.type === 'message');
   const outputText = message?.content?.find((item) => item?.type === 'output_text')?.text;
@@ -256,7 +264,7 @@ export async function executeVerifiedRun({ request, provider, journalPath } = {}
     strongestLimitation: response.output.strongestLimitation,
     inputRefsUsed: [...response.output.inputRefsUsed],
     providerResponseId: response.providerResponseId ?? null,
-    usage: response.usage ?? null,
+    usage: sanitizeUsage(response.usage),
     costUsd: response.costUsd,
     latencyMs: response.latencyMs,
     createdAt: new Date().toISOString(),

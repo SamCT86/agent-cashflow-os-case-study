@@ -74,7 +74,7 @@ They do **not** prove that the underlying forecasts are accurate, better than al
 
 This repository is a standalone reference for the engineering pattern. It is not a copy of the private product runtime, prompts, benchmark logic, live evidence, orchestration, or commercial controls.
 
-No credential is stored by the adapter. Raw evidence is sent only to the configured provider call and is intentionally left out of the persisted run record.
+No credential is stored by the adapter. Raw evidence is sent only to the configured provider call and is intentionally left out of the persisted run record. Persisted provider usage is allowlisted to input/output token counts; extra provider telemetry fields are discarded before journaling.
 
 See [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) for the exact disclosure boundary.
 
