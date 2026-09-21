@@ -11,7 +11,8 @@ The mechanism is intentionally small and inspectable:
 5. Execute the provider only when no verified record exists.
 6. Persist the verified record, then release only the claim owned by the current token.
 
-A concurrent request using the same `runId` but a different request fingerprint fails closed.
+A concurrent request using the same `runId` but a different request fingerprint fails closed. A stale claim is only reclaimable for the same request fingerprint; a stale conflicting fingerprint also fails closed instead of silently reusing the idempotency key for different semantics.
+
 ## What the tests prove
 
 The public test suite covers:
@@ -19,7 +20,8 @@ The public test suite covers:
 - two concurrent calls in one Node process invoke the provider once;
 - two separate Node processes sharing the same local filesystem invoke the provider once;
 - a conflicting in-flight fingerprint fails closed without a second provider call;
-- a stale claim can be reclaimed;
+- a stale conflicting fingerprint also fails closed before provider execution;
+- a stale claim for the same request can be reclaimed;
 - a provider failure releases the claim so a later retry can proceed;
 - the journal still contains one verified record for the winning run.
 
