@@ -48,7 +48,7 @@ The example is synthetic and redacted. Its purpose is to show the sequencing rul
 | --- | --- |
 | Request/payment/work/outcome/settlement mechanics | Implemented in private source |
 | Private implementation idempotency / replay safety | Implemented |
-| Public sequential replay + single-host concurrent run claim | Implemented and multiprocess-tested |
+| Public sequential replay + single-host concurrent run claim | Implemented and multiprocess-tested; stale conflicting fingerprints fail closed before reclaim |
 | Distributed concurrent exactly-once execution | Not claimed |
 | Crash after provider side effect before journal persistence | Requires reconciliation; not exactly-once |
 | Deterministic schemas and provenance | Implemented |

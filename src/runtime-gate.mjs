@@ -287,22 +287,27 @@ async function acquireRunClaim({ journalPath, runId, requestFingerprint, claimTt
       throw error;
     }
 
-    if (Date.now() - metadata.mtimeMs > claimTtlMs) {
-      await unlinkIfExists(claimPath);
-      continue;
-    }
-
+    let activeClaim;
     try {
-      const activeClaim = JSON.parse(await readFile(claimPath, 'utf8'));
+      activeClaim = JSON.parse(await readFile(claimPath, 'utf8'));
       if (typeof activeClaim?.requestFingerprint === 'string' && activeClaim.requestFingerprint !== requestFingerprint) {
         fail('IDEMPOTENCY_KEY_CONFLICT', runId);
       }
     } catch (error) {
       if (error instanceof SyntaxError || error?.code === 'ENOENT') {
+        if (Date.now() - metadata.mtimeMs > claimTtlMs) {
+          await unlinkIfExists(claimPath);
+          continue;
+        }
         await sleep(10);
         continue;
       }
       throw error;
+    }
+
+    if (Date.now() - metadata.mtimeMs > claimTtlMs) {
+      await unlinkIfExists(claimPath);
+      continue;
     }
 
     await sleep(10);

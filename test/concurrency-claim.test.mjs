@@ -112,6 +112,30 @@ test('stale run claim is reclaimed before provider execution', async () => {
   assert.equal(await exists(claimPath), false);
 });
 
+test('stale claim with a different request fingerprint fails closed before provider execution', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'aff-stale-conflict-'));
+  const journalPath = join(dir, 'runs.jsonl');
+  const claimPath = claimPathFor(journalPath, baseRequest.runId);
+  await writeFile(claimPath, `${JSON.stringify({
+    schemaVersion: 1,
+    ownerToken: 'crashed-owner',
+    requestFingerprint: '0'.repeat(64),
+  })}\n`, 'utf8');
+  const stale = new Date(Date.now() - 120_000);
+  await utimes(claimPath, stale, stale);
+  let calls = 0;
+
+  await assert.rejects(
+    () => executeVerifiedRun({
+      request: baseRequest,
+      provider: async () => { calls += 1; return response('resp_should_not_run'); },
+      journalPath,
+    }),
+    /IDEMPOTENCY_KEY_CONFLICT/,
+  );
+  assert.equal(calls, 0);
+});
+
 test('failed provider releases claim so a later retry can execute', async () => {
   const dir = await mkdtemp(join(tmpdir(), 'aff-release-claim-'));
   const journalPath = join(dir, 'runs.jsonl');
