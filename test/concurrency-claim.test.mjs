@@ -198,3 +198,30 @@ test('two Node processes coordinate one provider execution for the same runId', 
   assert.deepEqual(second, first);
   assert.equal(await exists(claimPathFor(journalPath, runId)), false);
 });
+
+
+test('multiple Node processes reclaim one stale claim without duplicate provider execution', async () => {
+  const workerPath = fileURLToPath(new URL('./fixtures/concurrent-worker.mjs', import.meta.url));
+
+  for (let round = 0; round < 20; round += 1) {
+    const dir = await mkdtemp(join(tmpdir(), 'aff-stale-multiprocess-'));
+    const journalPath = join(dir, 'runs.jsonl');
+    const callsPath = join(dir, 'provider-calls.log');
+    const runId = `run-stale-multiprocess-${round}`;
+    const claimPath = claimPathFor(journalPath, runId);
+
+    await writeFile(claimPath, '', 'utf8');
+    const stale = new Date(Date.now() - 120_000);
+    await utimes(claimPath, stale, stale);
+
+    const results = await Promise.all(Array.from({ length: 8 }, () =>
+      runWorker(workerPath, journalPath, callsPath, runId)));
+    const calls = (await readFile(callsPath, 'utf8')).trim().split('\n');
+    const records = (await readFile(journalPath, 'utf8')).trim().split('\n');
+
+    assert.equal(calls.length, 1, `round ${round} provider calls`);
+    assert.equal(records.length, 1, `round ${round} journal records`);
+    for (const result of results) assert.deepEqual(result, results[0]);
+    assert.equal(await exists(claimPath), false);
+  }
+});
