@@ -204,3 +204,26 @@ test('fails closed when a persisted runId is reused for a different request', as
   );
   assert.equal(calls, 1);
 });
+
+test('persists only allowlisted provider usage telemetry', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'aff-usage-sanitize-'));
+  const journalPath = join(dir, 'runs.jsonl');
+  const provider = async () => ({
+    status: 'completed', latencyMs: 320, costUsd: 0.004,
+    usage: { inputTokens: 120, outputTokens: 30, apiKey: 'must-not-persist', hiddenReasoning: 'must-not-persist' },
+    providerResponseId: 'resp_usage_sanitize_1',
+    output: {
+      decision: 'FORECAST', pYes: 0.64, uncertainty: 'MEDIUM',
+      strongestLimitation: 'Synthetic fixture only',
+      inputRefsUsed: ['evidence:a1', 'market:p1'],
+    },
+  });
+
+  const result = await runtime.executeVerifiedRun({ request: { ...request, runId: 'run-usage-sanitize' }, provider, journalPath });
+  const raw = await readFile(journalPath, 'utf8');
+
+  assert.deepEqual(result.usage, { inputTokens: 120, outputTokens: 30 });
+  assert.equal(raw.includes('must-not-persist'), false);
+  assert.equal(raw.includes('apiKey'), false);
+  assert.equal(raw.includes('hiddenReasoning'), false);
+});
