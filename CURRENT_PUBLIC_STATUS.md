@@ -7,6 +7,7 @@ Agent Forecast Foundry is maintained as a public engineering reference for how I
 ## What is real today
 
 - The public runtime reference is runnable and tested.
+- Concurrent attempts for one `runId` are coordinated with a single-host filesystem claim; a two-process test verifies one provider execution and one journal record.
 - The broader private work includes request, payment, work, outcome, and settlement mechanics.
 - Forecast identity, provenance, calibration, and held-out evaluation remain important proof requirements.
 - Measured forecast advantage, a qualified external buyer, paid repeat use, and production forecast deployment are not proven here.

@@ -1,5 +1,5 @@
-import { appendFile, readFile } from 'node:fs/promises';
-import { createHash } from 'node:crypto';
+import { appendFile, open, readFile, stat, unlink } from 'node:fs/promises';
+import { createHash, randomUUID } from 'node:crypto';
 
 const allowedDecisions = new Set(['FORECAST', 'NO_EDGE', 'MARKET_PRIOR_ADEQUATE', 'INSUFFICIENT_EVIDENCE', 'UNSUPPORTED', 'ABSTAIN']);
 const abstainingDecisions = new Set(['ABSTAIN', 'INSUFFICIENT_EVIDENCE', 'UNSUPPORTED']);
@@ -237,6 +237,90 @@ async function readPersistedRun(journalPath, runId) {
   return match;
 }
 
+function claimPathFor(journalPath, runId) {
+  const digest = createHash('sha256').update(runId).digest('hex');
+  return `${journalPath}.${digest}.claim`;
+}
+
+function replayPersisted(persisted, requestFingerprint, runId) {
+  if (typeof persisted.requestFingerprint !== 'string') fail('IDEMPOTENCY_STATE_UNVERIFIABLE', runId);
+  if (persisted.requestFingerprint !== requestFingerprint) fail('IDEMPOTENCY_KEY_CONFLICT', runId);
+  return Object.freeze({ ...persisted });
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function unlinkIfExists(path) {
+  try {
+    await unlink(path);
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error;
+  }
+}
+
+async function acquireRunClaim({ journalPath, runId, requestFingerprint, claimTtlMs }) {
+  const claimPath = claimPathFor(journalPath, runId);
+  const ownerToken = randomUUID();
+
+  while (true) {
+    let handle;
+    try {
+      handle = await open(claimPath, 'wx', 0o600);
+      await handle.writeFile(`${JSON.stringify({ schemaVersion: 1, ownerToken, requestFingerprint })}\n`, 'utf8');
+      await handle.close();
+      return { claimPath, ownerToken };
+    } catch (error) {
+      if (handle) {
+        try { await handle.close(); } catch {}
+        await unlinkIfExists(claimPath);
+      }
+      if (error?.code !== 'EEXIST') throw error;
+    }
+
+    let metadata;
+    try {
+      metadata = await stat(claimPath);
+    } catch (error) {
+      if (error?.code === 'ENOENT') continue;
+      throw error;
+    }
+
+    if (Date.now() - metadata.mtimeMs > claimTtlMs) {
+      await unlinkIfExists(claimPath);
+      continue;
+    }
+
+    try {
+      const activeClaim = JSON.parse(await readFile(claimPath, 'utf8'));
+      if (typeof activeClaim?.requestFingerprint === 'string' && activeClaim.requestFingerprint !== requestFingerprint) {
+        fail('IDEMPOTENCY_KEY_CONFLICT', runId);
+      }
+    } catch (error) {
+      if (error instanceof SyntaxError || error?.code === 'ENOENT') {
+        await sleep(10);
+        continue;
+      }
+      throw error;
+    }
+
+    await sleep(10);
+  }
+}
+
+async function releaseRunClaim({ claimPath, ownerToken }) {
+  let activeClaim;
+  try {
+    activeClaim = JSON.parse(await readFile(claimPath, 'utf8'));
+  } catch (error) {
+    if (error?.code === 'ENOENT') return;
+    if (error instanceof SyntaxError) return;
+    throw error;
+  }
+  if (activeClaim?.ownerToken === ownerToken) await unlinkIfExists(claimPath);
+}
+
 export async function executeVerifiedRun({ request, provider, journalPath } = {}) {
   if (typeof provider !== 'function') fail('PROVIDER_REQUIRED');
   nonEmptyString(journalPath, 'journalPath');
@@ -245,33 +329,42 @@ export async function executeVerifiedRun({ request, provider, journalPath } = {}
   const runId = nonEmptyString(request.runId, 'runId');
   const requestFingerprint = fingerprintRequest(request);
   const persisted = await readPersistedRun(journalPath, runId);
-  if (persisted) {
-    if (typeof persisted.requestFingerprint !== 'string') fail('IDEMPOTENCY_STATE_UNVERIFIABLE', runId);
-    if (persisted.requestFingerprint !== requestFingerprint) fail('IDEMPOTENCY_KEY_CONFLICT', runId);
-    return Object.freeze({ ...persisted });
+  if (persisted) return replayPersisted(persisted, requestFingerprint, runId);
+
+  const declaredMaxLatencyMs = typeof request.maxLatencyMs === 'number' && Number.isFinite(request.maxLatencyMs)
+    ? Math.max(0, request.maxLatencyMs)
+    : 0;
+  const claimTtlMs = Math.max(30_000, declaredMaxLatencyMs + 5_000);
+  const claim = await acquireRunClaim({ journalPath, runId, requestFingerprint, claimTtlMs });
+
+  try {
+    const persistedAfterClaim = await readPersistedRun(journalPath, runId);
+    if (persistedAfterClaim) return replayPersisted(persistedAfterClaim, requestFingerprint, runId);
+
+    const response = await provider({ request });
+    const verdict = evaluateBoundedAgentRun({ request, response });
+    const record = Object.freeze({
+      schemaVersion: 2,
+      runId: verdict.runId,
+      requestFingerprint,
+      verdict: verdict.verdict,
+      decision: verdict.decision,
+      pYes: verdict.pYes,
+      uncertainty: response.output.uncertainty,
+      strongestLimitation: response.output.strongestLimitation,
+      inputRefsUsed: [...response.output.inputRefsUsed],
+      providerResponseId: response.providerResponseId ?? null,
+      usage: sanitizeUsage(response.usage),
+      costUsd: response.costUsd,
+      latencyMs: response.latencyMs,
+      createdAt: new Date().toISOString(),
+    });
+
+    await appendFile(journalPath, `${JSON.stringify(record)}\n`, 'utf8');
+    return record;
+  } finally {
+    await releaseRunClaim(claim);
   }
-
-  const response = await provider({ request });
-  const verdict = evaluateBoundedAgentRun({ request, response });
-  const record = Object.freeze({
-    schemaVersion: 2,
-    runId: verdict.runId,
-    requestFingerprint,
-    verdict: verdict.verdict,
-    decision: verdict.decision,
-    pYes: verdict.pYes,
-    uncertainty: response.output.uncertainty,
-    strongestLimitation: response.output.strongestLimitation,
-    inputRefsUsed: [...response.output.inputRefsUsed],
-    providerResponseId: response.providerResponseId ?? null,
-    usage: sanitizeUsage(response.usage),
-    costUsd: response.costUsd,
-    latencyMs: response.latencyMs,
-    createdAt: new Date().toISOString(),
-  });
-
-  await appendFile(journalPath, `${JSON.stringify(record)}\n`, 'utf8');
-  return record;
 }
 
 export function evaluateFixtureSet(fixtures) {
