@@ -33,6 +33,26 @@ test('accepts a bounded response that only cites authorized inputs', () => {
   });
 });
 
+test('fails closed when an accepted decision cites no bound evidence', () => {
+  for (const decision of ['FORECAST', 'NO_EDGE', 'MARKET_PRIOR_ADEQUATE']) {
+    assert.throws(
+      () => evaluateBoundedAgentRun({
+        ...base,
+        response: {
+          ...base.response,
+          output: {
+            ...base.response.output,
+            decision,
+            pYes: decision === 'FORECAST' ? 0.63 : null,
+            inputRefsUsed: [],
+          },
+        },
+      }),
+      /EVIDENCE_REF_REQUIRED/,
+    );
+  }
+});
+
 test('fails closed when output cites an input that was not bound to the run', () => {
   assert.throws(
     () => evaluateBoundedAgentRun({
