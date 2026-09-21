@@ -32,6 +32,7 @@ function validateOutput(output, inputBindings) {
   if (!allowedUncertainty.has(output.uncertainty)) fail('INVALID_UNCERTAINTY');
   nonEmptyString(output.strongestLimitation, 'strongestLimitation');
   if (!Array.isArray(output.inputRefsUsed)) fail('INVALID_INPUT_REFS');
+  if (!abstainingDecisions.has(output.decision) && output.inputRefsUsed.length === 0) fail('EVIDENCE_REF_REQUIRED');
 
   const allowedRefs = new Set(inputBindings);
   for (const ref of output.inputRefsUsed) {
