@@ -13,6 +13,7 @@ A run can still be unsafe or unusable if it uses the wrong evidence, exceeds a c
 
 ```text
 request + allowed evidence
+-> sequential duplicate-run check
 -> OpenAI Responses API adapter
 -> strict JSON Schema output
 -> provider status + token/cost/latency data
@@ -49,6 +50,7 @@ If you want to review the flow, start at `executeVerifiedRun`, follow the provid
 
 The run fails closed when:
 
+- a `runId` is already present in the journal before provider execution;
 - output cites evidence that was not bound to the run;
 - provider input tries to use an unbound reference;
 - provider status is not `completed`;
@@ -58,7 +60,9 @@ The run fails closed when:
 - hidden reasoning or secret-bearing fields would be persisted;
 - structured output cannot be parsed under the expected contract.
 
-An incomplete provider run is rejected **before** the JSONL journal is written.
+An incomplete provider run is rejected **before** the JSONL journal is written. A sequential replay of a completed `runId` is also rejected **before** another provider call.
+
+The journal guard is intentionally narrow: JSONL is not a transactional datastore. Two concurrent processes can still race between the read and append steps. A production implementation should use a durable unique run/idempotency key and transactional state transitions rather than treating this file-backed check as concurrency-safe idempotency.
 
 ## What the eval proves - and what it does not
 
