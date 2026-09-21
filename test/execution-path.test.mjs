@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import * as runtime from '../src/runtime-gate.mjs';
@@ -144,4 +144,24 @@ test('provider requires exact one-to-one coverage of bound input refs', async ()
   };
   await assert.rejects(() => provider({ request: duplicateRequest }), /DUPLICATE_PROVIDER_INPUT_REF/);
   assert.equal(called, false);
+});
+
+test('duplicate persisted runId fails closed before another provider call', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'aff-duplicate-run-'));
+  const journalPath = join(dir, 'runs.jsonl');
+  const existing = JSON.stringify({ schemaVersion: 1, runId: request.runId, verdict: 'ACCEPTED' });
+  await writeFile(journalPath, `${existing}\n`, 'utf8');
+
+  let providerCalls = 0;
+  const provider = async () => {
+    providerCalls += 1;
+    throw new Error('provider should not be called for a persisted runId');
+  };
+
+  await assert.rejects(
+    () => runtime.executeVerifiedRun({ request, provider, journalPath }),
+    /RUN_ALREADY_RECORDED:run-e2e-001/,
+  );
+  assert.equal(providerCalls, 0);
+  assert.equal((await readFile(journalPath, 'utf8')).trim(), existing);
 });
