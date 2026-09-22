@@ -107,6 +107,23 @@ test('provider rejects an input body whose ref was not bound to the run', async 
   assert.equal(called, false);
 });
 
+test('provider validates pricing and request bounds before any network call', async () => {
+  for (const badRequest of [
+    { ...request, pricing: { inputUsdPerMillion: -1, outputUsdPerMillion: 1.2 } },
+    { ...request, pricing: { inputUsdPerMillion: 0.2, outputUsdPerMillion: Number.NaN } },
+    { ...request, maxLatencyMs: 0 },
+    { ...request, maxCostUsd: -0.01 },
+  ]) {
+    let called = false;
+    const provider = runtime.createOpenAIResponsesProvider({
+      apiKey: 'test-key',
+      fetchImpl: async () => { called = true; throw new Error('should not call'); },
+    });
+    await assert.rejects(() => provider({ request: badRequest }), /INVALID_NUMBER/);
+    assert.equal(called, false);
+  }
+});
+
 test('provider surfaces HTTP failure without returning a fluent result', async () => {
   const provider = runtime.createOpenAIResponsesProvider({
     apiKey: 'test-key',
