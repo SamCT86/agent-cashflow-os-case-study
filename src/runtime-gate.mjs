@@ -183,9 +183,9 @@ export function createOpenAIResponsesProvider({
       }),
     });
 
-    const latencyMs = Math.max(0, now() - startedAt);
     if (!response?.ok) fail('OPENAI_HTTP_ERROR', String(response?.status ?? 'unknown'));
     const data = await response.json();
+    const latencyMs = Math.max(0, now() - startedAt);
     const usage = {
       inputTokens: finiteNumber(data?.usage?.input_tokens, 'inputTokens', 0),
       outputTokens: finiteNumber(data?.usage?.output_tokens, 'outputTokens', 0),
