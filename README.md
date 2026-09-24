@@ -5,7 +5,7 @@
 **Status:** runnable public engineering reference  
 **Portfolio:** https://sarmadtawfeek.se/
 
-I built this repository to show one practical idea: a model returning an answer does not mean the whole agent run should be trusted.
+I use this repository to show one practical idea: a model returning an answer does not mean the whole agent run should be trusted.
 
 A run can still be unsafe or unusable if it uses the wrong evidence, exceeds a cost or latency limit, returns incomplete provider state, or stores data that should not be persisted. This reference makes those checks visible in code.
 
@@ -89,6 +89,6 @@ See [`PUBLIC_BOUNDARY.md`](PUBLIC_BOUNDARY.md) for the exact disclosure boundary
 - [ReleaseProof](https://github.com/SamCT86/releaseproof-case-study) - verify that evidence belongs to the exact artifact being released.
 - [PriceBriefs](https://github.com/SamCT86/pricebriefs-case-study) - qualify market evidence before using it in a pricing decision.
 
-## Engineering accountability
+## AI-native accountability
 
-I use AI tools as part of my implementation workflow. I remain responsible for the problem framing, architecture, acceptance criteria, verification design, debugging, tests, and release decisions.
+This reference is AI-assisted. My role is problem framing, system direction, acceptance criteria, testing and verification, and the final release judgment. It is not a claim that I manually wrote every line.
